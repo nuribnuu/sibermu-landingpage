@@ -28,29 +28,56 @@ export default function ScrollSequence() {
     const renderFrame = (index: number) => {
       const img = images[index];
       if (!img || !img.complete) return;
-      context.clearRect(0, 0, canvas.width, canvas.height);
 
+      // 1. Fallback Background Safety Net: isi canvas dengan warna senada foto hero (bukan hitam)
+      const bgGradient = context.createLinearGradient(0, 0, 0, canvas.height);
+      bgGradient.addColorStop(0, "#b2c4d6");
+      bgGradient.addColorStop(1, "#9cb2c7");
+      context.fillStyle = bgGradient;
+      context.fillRect(0, 0, canvas.width, canvas.height);
+
+      const isMobile = window.innerWidth < 768;
       const imgRatio = img.width / img.height;
       const canvasRatio = canvas.width / canvas.height;
       let drawWidth: number, drawHeight: number, drawX: number, drawY: number;
 
-      if (canvasRatio > imgRatio) {
+      if (isMobile) {
+        // MOBILE (< 768px): Hybrid Fill - canvas selalu terisi 100dvh penuh tanpa area hitam/kosong,
+        // subjek (kepala, VR, wajah & tangan) diposisikan di focal area teratas.
         drawWidth = canvas.width;
         drawHeight = canvas.width / imgRatio;
         drawX = 0;
-        drawY = (canvas.height - drawHeight) / 2;
+
+        if (drawHeight < canvas.height) {
+          drawHeight = canvas.height;
+          drawWidth = canvas.height * imgRatio;
+          drawX = (canvas.width - drawWidth) / 2;
+          drawY = 0;
+        } else {
+          drawY = (canvas.height - drawHeight) * 0.05;
+        }
       } else {
-        drawHeight = canvas.height;
-        drawWidth = canvas.height * imgRatio;
-        drawX = (canvas.width - drawWidth) / 2;
-        drawY = 0;
+        // DESKTOP & TABLET (>= 768px): Cover mode dengan focal position terfokus di bagian atas-tengah
+        if (canvasRatio > imgRatio) {
+          drawWidth = canvas.width;
+          drawHeight = canvas.width / imgRatio;
+          drawX = 0;
+          drawY = (canvas.height - drawHeight) / 2;
+        } else {
+          drawHeight = canvas.height;
+          drawWidth = canvas.height * imgRatio;
+          drawX = (canvas.width - drawWidth) / 2;
+          drawY = (canvas.height - drawHeight) * 0.15;
+        }
       }
+
       context.drawImage(img, drawX, drawY, drawWidth, drawHeight);
     };
 
     const updateCanvasSize = () => {
-      canvas.width = window.innerWidth * (window.devicePixelRatio || 1);
-      canvas.height = window.innerHeight * (window.devicePixelRatio || 1);
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
       renderFrame(currentFrameIndex);
     };
 
@@ -100,6 +127,7 @@ export default function ScrollSequence() {
 
     window.addEventListener("scroll", updateFrameOnScroll, { passive: true });
     window.addEventListener("resize", updateCanvasSize);
+    window.addEventListener("orientationchange", updateCanvasSize);
 
     preloadImages();
     animationFrameId = requestAnimationFrame(animate);
@@ -107,6 +135,7 @@ export default function ScrollSequence() {
     return () => {
       window.removeEventListener("scroll", updateFrameOnScroll);
       window.removeEventListener("resize", updateCanvasSize);
+      window.removeEventListener("orientationchange", updateCanvasSize);
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
@@ -123,11 +152,11 @@ export default function ScrollSequence() {
         <div className="w-10 h-10 border-[3px] border-white/10 border-t-white rounded-full animate-spin" />
       </div>
 
-      {/* Frame Sequence Canvas */}
+      {/* Frame Sequence Canvas (100dvh full viewport height) */}
       <canvas
         ref={canvasRef}
         id="hero-lightpass"
-        className="fixed top-0 left-0 w-screen h-screen z-10 pointer-events-none object-cover"
+        className="fixed top-0 left-0 w-screen h-[100dvh] z-10 pointer-events-none object-cover block"
       />
     </>
   );

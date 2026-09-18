@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { LanguageProvider } from "@/context/LanguageContext";
+import Header from "@/components/Header";
 
 export const metadata: Metadata = {
-  title: "sibermu-landingpage",
-  description: "Scroll-driven frame sequence animation",
+  title: "SiberMu - Digital Experience Universitas Siber Muhammadiyah",
+  description: "Bertumbuh dengan Ilmu, Berkarya dengan Nilai.",
 };
 
 export default function RootLayout({
@@ -12,8 +14,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="no-scrollbar">
-      <body className="no-scrollbar bg-black antialiased">{children}</body>
+    <html lang="id" className="no-scrollbar">
+      <body className="no-scrollbar bg-black text-white antialiased">
+        <LanguageProvider>
+          <Header />
+          {children}
+        </LanguageProvider>
+      </body>
     </html>
   );
 }
+
