@@ -62,4 +62,28 @@ export const en = {
       promoCta: "Explore AIK",
     },
   },
+  section2: {
+    headlineLine1: "Growing Through Knowledge.",
+    headlineLine2: "Building Through Values.",
+    subheadline: "Student life at SiberMu is a space to learn, grow, achieve, and give benefit, grounded in the values of Al-Islam and Kemuhammadiyahan.",
+    cta: "Explore →",
+    statBadgeTitle: "500+ Active &",
+    statBadgeSubtitle: "Accomplished Students",
+    photoBadgeText: "LEADING CYBER CAMPUS",
+    smallPhotoText: "Al-Islam & Kemuhammadiyahan Activities",
+  },
+  section3: {
+    headlineLine1: "Two Spaces.",
+    headlineLine2: "One Journey.",
+    card1Title: "STUDENT AFFAIRS",
+    card1Desc: "A space for students to develop their potential, build networks, organize, achieve, and prepare for the professional world.",
+    card1Cta: "Explore Student Affairs",
+    card2Title: "AL-ISLAM & KEMUHAMMADIYAHAN",
+    card2Desc: "The values that form the foundation for shaping students who are knowledgeable, principled, and progressive.",
+    card2Cta: "Discover AIK",
+  },
 };
+
+
+
+

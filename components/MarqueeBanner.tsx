@@ -4,14 +4,15 @@ import React from "react";
 
 export default function MarqueeBanner() {
   const marqueeItems = [
-    "SELAMAT DATANG DI BIRO AIK DAN KEMAHASISWAAN",
-    "WELCOME TO THE AIK AND STUDENT AFFAIRS BUREAU",
-    "SELAMAT DATANG DI BIRO AIK DAN KEMAHASISWAAN",
-    "WELCOME TO THE AIK AND STUDENT AFFAIRS BUREAU",
+    "SELAMAT DATANG DI BIRO KEMAHASISWAAN DAN AIK",
+    "WELCOME TO THE STUDENT AFFAIRS AND AIK BUREAU",
+    "SELAMAT DATANG DI BIRO KEMAHASISWAAN DAN AIK",
+    "WELCOME TO THE STUDENT AFFAIRS AND AIK BUREAU",
   ];
 
   return (
-    <div className="w-full bg-[#FF9E44] h-[38px] sm:h-[46px] lg:h-[50px] overflow-hidden flex items-center select-none relative z-30 shadow-sm border-y border-[#1A2A5B]/10">
+    <div className="w-full bg-[#FF9E44] h-[38px] sm:h-[46px] lg:h-[50px] overflow-hidden flex items-center select-none relative z-30 shadow-sm border-t-[2.5px] border-b-[2.5px] sm:border-t-[3px] sm:border-b-[3px] border-[#1A2A5B]">
+
       {/* Single track container (w-max) containing 2 identical copies side-by-side */}
       <div className="flex w-max items-center animate-marquee">
         {/* Copy 1 */}

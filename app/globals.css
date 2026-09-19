@@ -13,10 +13,13 @@
 }
 
 :root {
+  --gold-color: #FF9E44;
+  --gold-rgb: 255, 158, 68;
   --header-height: 56px;
   --marquee-height: 38px;
   --header-marquee-total: 94px;
 }
+
 
 @media (min-width: 640px) {
   :root {
@@ -41,8 +44,16 @@
   width: 100%;
 }
 
+.framed-image {
+  border: 7px solid #1A2A5B;
+  background-color: #ffffff;
+  padding: 6px;
+  border-radius: 0px;
+}
+
 html,
 body {
+  scroll-behavior: smooth;
   -ms-overflow-style: none;
   scrollbar-width: none;
   background-color: #000;
@@ -111,3 +122,112 @@ body::-webkit-scrollbar {
   animation: chevron-bounce 1.4s ease-in-out infinite;
   animation-delay: 0.25s;
 }
+
+/* SECTION 2 HEADLINE GOLD STABILO / MARKER HIGHLIGHT */
+.headline-marker {
+  display: inline;
+  position: relative;
+  z-index: 1;
+  padding: 0.05em 0.22em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  background-image: linear-gradient(
+    104deg,
+    rgba(var(--gold-rgb), 0.15) 0%,
+    rgba(var(--gold-rgb), 0.72) 3%,
+    rgba(var(--gold-rgb), 0.68) 97%,
+    rgba(var(--gold-rgb), 0.2) 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 55%;
+  background-position: 0 84%;
+}
+
+.headline-marker-1 {
+  border-radius: 2px 8px 3px 7px;
+}
+
+.headline-marker-2 {
+  border-radius: 6px 3px 8px 4px;
+}
+
+/* REUSABLE NEOBRUTALISM IMAGE FRAME & BADGE STYLES */
+.neobrutalist-frame {
+  border: 3.5px solid #000000;
+  box-shadow: 6px 6px 0px #000000;
+  border-radius: 0px;
+  background-color: #ffffff;
+}
+
+@media (min-width: 640px) {
+  .neobrutalist-frame {
+    border-width: 4px;
+    box-shadow: 8px 8px 0px #000000;
+  }
+}
+
+.neobrutalist-frame-small {
+  border: 3.5px solid #000000;
+  box-shadow: 5px 5px 0px #000000;
+  border-radius: 0px;
+  background-color: #ffffff;
+}
+
+@media (min-width: 640px) {
+  .neobrutalist-frame-small {
+    border-width: 4px;
+    box-shadow: 7px 7px 0px #000000;
+  }
+}
+
+.neobrutalist-badge {
+  border: 2.5px solid #000000;
+  box-shadow: 3px 3px 0px #000000;
+  border-radius: 9999px;
+  background-color: #ffffff;
+  color: #000000;
+  font-weight: 800;
+}
+
+.neobrutalist-card-layer {
+  border: 3.5px solid #000000;
+  box-shadow: 6px 6px 0px #000000;
+  border-radius: 0px;
+  background-color: rgba(255, 158, 68, 0.25);
+}
+
+@media (min-width: 640px) {
+  .neobrutalist-card-layer {
+    border-width: 4px;
+    box-shadow: 8px 8px 0px #000000;
+  }
+}
+
+/* REUSABLE SUBTLE DOT GRID BACKGROUND PATTERN (LIGHT SECTIONS) */
+.dot-grid-pattern-light {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, rgba(26, 42, 91, 0.1) 1.5px, transparent 1.5px);
+  background-size: 22px 22px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+  z-index: 0;
+}
+
+/* REUSABLE SUBTLE DOT GRID BACKGROUND PATTERN (DARK SECTIONS) */
+.dot-grid-pattern-dark {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1.5px, transparent 1.5px);
+  background-size: 22px 22px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+  z-index: 0;
+}
+
+
+
+
+

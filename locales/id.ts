@@ -62,4 +62,28 @@ export const id = {
       promoCta: "Eksplorasi AIK",
     },
   },
+  section2: {
+    headlineLine1: "Bertumbuh dengan Ilmu.",
+    headlineLine2: "Berkarya dengan Nilai.",
+    subheadline: "Kehidupan mahasiswa SiberMu adalah ruang untuk belajar, berkembang, berprestasi, dan memberi manfaat dengan berlandaskan nilai Al-Islam dan Kemuhammadiyahan.",
+    cta: "Jelajahi →",
+    statBadgeTitle: "500+ Mahasiswa",
+    statBadgeSubtitle: "Aktif & Berprestasi",
+    photoBadgeText: "KAMPUS SIBER TERDEPAN",
+    smallPhotoText: "Kegiatan Al-Islam & Kemuhammadiyahan",
+  },
+  section3: {
+    headlineLine1: "Dua Ruang.",
+    headlineLine2: "Satu Perjalanan.",
+    card1Title: "KEMAHASISWAAN",
+    card1Desc: "Tempat mahasiswa mengembangkan potensi, membangun jejaring, berorganisasi, berprestasi, dan mempersiapkan diri menghadapi dunia profesional.",
+    card1Cta: "Jelajahi Kemahasiswaan",
+    card2Title: "AL-ISLAM & KEMUHAMMADIYAHAN",
+    card2Desc: "Nilai yang menjadi landasan dalam membentuk mahasiswa yang berilmu, berakhlak, dan berkemajuan.",
+    card2Cta: "Kenali AIK",
+  },
 };
+
+
+
+
