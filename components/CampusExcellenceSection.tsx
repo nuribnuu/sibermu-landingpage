@@ -15,15 +15,15 @@ export const section3DuaDuniaData = {
     card1: {
       title: "KEMAHASISWAAN",
       description:
-        "Tempat mahasiswa mengembangkan potensi, membangun jejaring, berorganisasi, berprestasi, dan mempersiapkan diri menghadapi dunia profesional.",
-      buttonText: "Jelajahi Kemahasiswaan",
+        "Tempat mahasiswa berorganisasi, aktif di unit kegiatan mahasiswa, meraih prestasi, dan mendapatkan layanan yang mendukung perjalanan akademik maupun profesionalnya.",
+      buttonText: "Jelajahi",
       altImage: "Kegiatan Kemahasiswaan & Organisasi SiberMu",
     },
     card2: {
       title: "AL-ISLAM & KEMUHAMMADIYAHAN",
       description:
-        "Nilai yang menjadi landasan dalam membentuk mahasiswa yang berilmu, berakhlak, dan berkemajuan.",
-      buttonText: "Kenali AIK",
+        "Ruang kegiatan keagamaan, kajian, dan syiar yang membentuk mahasiswa berilmu, berakhlak, dan berkemajuan sesuai nilai Kemuhammadiyahan.",
+      buttonText: "Jelajahi",
       altImage: "Pembinaan Al-Islam & Kemuhammadiyahan SiberMu",
     },
   },
@@ -35,15 +35,15 @@ export const section3DuaDuniaData = {
     card1: {
       title: "STUDENT AFFAIRS",
       description:
-        "A space for students to develop their potential, build networks, organize, achieve, and prepare for the professional world.",
-      buttonText: "Explore Student Affairs",
+        "A place for students to organize, get involved in student activity units, achieve accomplishments, and access services that support both their academic journey and professional readiness.",
+      buttonText: "Explore",
       altImage: "SiberMu Student Affairs & Organizations",
     },
     card2: {
       title: "AL-ISLAM & KEMUHAMMADIYAHAN",
       description:
-        "The values that form the foundation for shaping students who are knowledgeable, principled, and progressive.",
-      buttonText: "Discover AIK",
+        "A space for religious activities, study sessions, and outreach (da'wah) that shapes students to be knowledgeable, of good character, and progressive, in line with Kemuhammadiyahan values.",
+      buttonText: "Explore",
       altImage: "SiberMu Al-Islam & Kemuhammadiyahan Studies",
     },
   },
@@ -53,11 +53,22 @@ export default function CampusExcellenceSection() {
   const { locale } = useLanguage();
   const content = section3DuaDuniaData[locale] || section3DuaDuniaData.id;
 
+  const handleScrollTo = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    targetId: string,
+  ) => {
+    e.preventDefault();
+    const target = document.getElementById(targetId);
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <section
       id="dua-dunia"
       data-theme="dark"
-      className="relative lg:sticky lg:top-0 min-h-screen lg:h-screen lg:h-[100dvh] bg-[#0b091f] text-white z-30 flex flex-col justify-center overflow-visible lg:overflow-hidden py-16 sm:py-20 lg:py-0 border-t border-white/5 scroll-mt-14 sm:scroll-mt-16 lg:scroll-mt-0"
+      className="relative lg:sticky lg:top-0 min-h-screen lg:h-screen lg:h-[100dvh] bg-[#0b091f] text-white z-[30] flex flex-col justify-center overflow-visible lg:overflow-hidden py-16 sm:py-20 lg:pt-[calc(var(--header-marquee-total)+1.5rem)] lg:pb-8 border-t border-white/5 lg:border-t-2 lg:border-[#ff9e44] scroll-mt-[var(--header-marquee-total)]"
     >
       {/* Subtle Dot Grid Background Pattern with Top-Bottom Fade Mask */}
       <div className="dot-grid-pattern-dark" aria-hidden="true" />
@@ -65,7 +76,6 @@ export default function CampusExcellenceSection() {
 
       {/* Main Container */}
       <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 relative z-10">
-        
         {/* HEADLINE BLOCK */}
         {/* Center-aligned headline with Gold Stabilo Highlight */}
         <div className="text-center mb-10 sm:mb-14">
@@ -82,10 +92,8 @@ export default function CampusExcellenceSection() {
         {/* 2 CARDS GRID (DUA RUANG. SATU PERJALANAN.) */}
         {/* Desktop: 2 columns | Mobile/Tablet (< 1024px): 1 column stack */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-stretch max-w-5xl mx-auto">
-          
           {/* CARD 01: KEMAHASISWAAN */}
           <div className="group bg-white p-6 sm:p-8 rounded-none border-[3.5px] sm:border-4 border-black shadow-[6px_6px_0px_#000000] sm:shadow-[8px_8px_0px_#000000] flex flex-col justify-between transition-all duration-400 ease-out hover:-translate-y-1.5 hover:shadow-[10px_10px_0px_#000000]">
-            
             <div className="flex flex-col space-y-6">
               {/* IMAGE FRAME WITH NEOBRUTALISM STYLING & ROTATION */}
               <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] neobrutalist-frame p-1.5 rounded-none transform -rotate-[1.5deg] transition-transform duration-500 ease-out group-hover:rotate-0 overflow-visible">
@@ -120,22 +128,21 @@ export default function CampusExcellenceSection() {
 
             {/* CTA BUTTON */}
             <div className="pt-6 sm:pt-8 w-full">
-              <Link
-                href="/kemahasiswaan"
-                className="w-full bg-[#1A2A5B] text-white hover:bg-[#121e42] font-semibold text-sm sm:text-[15px] px-7 py-3.5 rounded-none flex items-center justify-center space-x-2.5 transition-all duration-200 border border-[#1A2A5B] shadow-sm"
+              <a
+                href="#life-at-sibermu"
+                onClick={(e) => handleScrollTo(e, "life-at-sibermu")}
+                className="w-full bg-[#1A2A5B] text-white hover:bg-[#121e42] font-semibold text-sm sm:text-[15px] px-7 py-3.5 rounded-none flex items-center justify-center space-x-2.5 transition-all duration-200 border border-[#1A2A5B] shadow-sm cursor-pointer"
               >
                 <span>{content.card1.buttonText}</span>
                 <span className="text-base transition-transform duration-300 group-hover:translate-x-1.5">
                   →
                 </span>
-              </Link>
+              </a>
             </div>
-
           </div>
 
           {/* CARD 02: AL-ISLAM & KEMUHAMMADIYAHAN */}
           <div className="group bg-white p-6 sm:p-8 rounded-none border-[3.5px] sm:border-4 border-black shadow-[6px_6px_0px_#000000] sm:shadow-[8px_8px_0px_#000000] flex flex-col justify-between transition-all duration-400 ease-out hover:-translate-y-1.5 hover:shadow-[10px_10px_0px_#000000]">
-            
             <div className="flex flex-col space-y-6">
               {/* IMAGE FRAME WITH NEOBRUTALISM STYLING & ROTATION (OPPOSITE ROTATION FOR VARIATION) */}
               <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] neobrutalist-frame p-1.5 rounded-none transform rotate-[1.5deg] transition-transform duration-500 ease-out group-hover:rotate-0 overflow-visible">
@@ -170,21 +177,19 @@ export default function CampusExcellenceSection() {
 
             {/* CTA BUTTON */}
             <div className="pt-6 sm:pt-8 w-full">
-              <Link
-                href="/aik"
-                className="w-full bg-[#1A2A5B] text-white hover:bg-[#121e42] font-semibold text-sm sm:text-[15px] px-7 py-3.5 rounded-none flex items-center justify-center space-x-2.5 transition-all duration-200 border border-[#1A2A5B] shadow-sm"
+              <a
+                href="#aik"
+                onClick={(e) => handleScrollTo(e, "aik")}
+                className="w-full bg-[#1A2A5B] text-white hover:bg-[#121e42] font-semibold text-sm sm:text-[15px] px-7 py-3.5 rounded-none flex items-center justify-center space-x-2.5 transition-all duration-200 border border-[#1A2A5B] shadow-sm cursor-pointer"
               >
                 <span>{content.card2.buttonText}</span>
                 <span className="text-base transition-transform duration-300 group-hover:translate-x-1.5">
                   →
                 </span>
-              </Link>
+              </a>
             </div>
-
           </div>
-
         </div>
-
       </div>
     </section>
   );

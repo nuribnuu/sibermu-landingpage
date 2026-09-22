@@ -13,9 +13,22 @@ export default function MegaMenu({ activeMenu, onClose }: MegaMenuProps) {
 
   if (!activeMenu) return null;
 
+  const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string, isExternal?: boolean) => {
+    if (isExternal) return;
+    if (href.startsWith("#") || href.startsWith("/#")) {
+      e.preventDefault();
+      const targetId = href.replace(/^\/?#/, "");
+      const target = document.getElementById(targetId);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth" });
+      }
+      onClose();
+    }
+  };
+
   let menuData = {
-    mainCategories: [] as { label: string; isExternal: boolean }[],
-    subItems: [] as string[],
+    mainCategories: [] as { label: string; isExternal: boolean; href: string }[],
+    subItems: [] as { label: string; href: string }[],
     ctaLabel: "",
     ctaLink: "",
   };
@@ -23,68 +36,68 @@ export default function MegaMenu({ activeMenu, onClose }: MegaMenuProps) {
   if (activeMenu === "kemahasiswaan") {
     menuData = {
       mainCategories: [
-        { label: t("megaMenu.kemahasiswaan.category1Title"), isExternal: false },
-        { label: t("megaMenu.kemahasiswaan.category2Title"), isExternal: false },
-        { label: "Portal Mahasiswa SiberMu", isExternal: true },
+        { label: t("megaMenu.kemahasiswaan.category1Title"), isExternal: false, href: "#life-at-sibermu" },
+        { label: t("megaMenu.kemahasiswaan.category2Title"), isExternal: false, href: "#layanan-mahasiswa" },
+        { label: "Portal Mahasiswa SiberMu", isExternal: true, href: "https://sibermu.ac.id" },
       ],
       subItems: [
-        t("megaMenu.kemahasiswaan.item1"),
-        t("megaMenu.kemahasiswaan.item2"),
-        t("megaMenu.kemahasiswaan.item3"),
-        t("megaMenu.kemahasiswaan.item4"),
-        t("megaMenu.kemahasiswaan.item5"),
-        t("megaMenu.kemahasiswaan.item6"),
+        { label: t("megaMenu.kemahasiswaan.item1"), href: "#life-at-sibermu" },
+        { label: t("megaMenu.kemahasiswaan.item2"), href: "#life-at-sibermu" },
+        { label: t("megaMenu.kemahasiswaan.item3"), href: "#prestasi" },
+        { label: t("megaMenu.kemahasiswaan.item4"), href: "#life-at-sibermu" },
+        { label: t("megaMenu.kemahasiswaan.item5"), href: "#layanan-mahasiswa" },
+        { label: t("megaMenu.kemahasiswaan.item6"), href: "#layanan-mahasiswa" },
       ],
-      ctaLabel: "Pelajari Lebih Lanjut Layanan Kemahasiswaan SiberMu",
-      ctaLink: "/kemahasiswaan",
+      ctaLabel: t("megaMenu.kemahasiswaan.promoCta"),
+      ctaLink: "#life-at-sibermu",
     };
   } else if (activeMenu === "layanan") {
     menuData = {
       mainCategories: [
-        { label: t("megaMenu.layanan.category1Title"), isExternal: false },
-        { label: t("megaMenu.layanan.category2Title"), isExternal: false },
-        { label: "Sistem Informasi Akademik (SIAKAD)", isExternal: true },
+        { label: t("megaMenu.layanan.category1Title"), isExternal: false, href: "#layanan-mahasiswa" },
+        { label: t("megaMenu.layanan.category2Title"), isExternal: false, href: "#layanan-mahasiswa" },
+        { label: "SIAKAD SiberMu", isExternal: true, href: "https://sibermu.ac.id" },
       ],
       subItems: [
-        t("megaMenu.layanan.item1"),
-        t("megaMenu.layanan.item2"),
-        t("megaMenu.layanan.item3"),
-        t("megaMenu.layanan.item4"),
-        t("megaMenu.layanan.item5"),
-        t("megaMenu.layanan.item6"),
+        { label: t("megaMenu.layanan.item1"), href: "#layanan-mahasiswa" },
+        { label: t("megaMenu.layanan.item2"), href: "#layanan-mahasiswa" },
+        { label: t("megaMenu.layanan.item3"), href: "#layanan-mahasiswa" },
+        { label: t("megaMenu.layanan.item4"), href: "#layanan-mahasiswa" },
+        { label: t("megaMenu.layanan.item5"), href: "#layanan-mahasiswa" },
+        { label: t("megaMenu.layanan.item6"), href: "#layanan-mahasiswa" },
       ],
-      ctaLabel: "Jelajahi Portal Layanan Terpadu Universitas Siber Muhammadiyah",
-      ctaLink: "/layanan",
+      ctaLabel: t("megaMenu.layanan.promoCta"),
+      ctaLink: "#layanan-mahasiswa",
     };
   } else if (activeMenu === "aik") {
     menuData = {
       mainCategories: [
-        { label: t("megaMenu.aik.category1Title"), isExternal: false },
-        { label: t("megaMenu.aik.category2Title"), isExternal: false },
-        { label: "Jurnal & Studi Al-Islam", isExternal: true },
+        { label: t("megaMenu.aik.category1Title"), isExternal: false, href: "#aik" },
+        { label: t("megaMenu.aik.category2Title"), isExternal: false, href: "#masjid-amal-mulya" },
+        { label: "Jurnal & Studi Al-Islam", isExternal: true, href: "https://sibermu.ac.id" },
       ],
       subItems: [
-        t("megaMenu.aik.item1"),
-        t("megaMenu.aik.item2"),
-        t("megaMenu.aik.item3"),
-        t("megaMenu.aik.item4"),
-        t("megaMenu.aik.item5"),
-        t("megaMenu.aik.item6"),
+        { label: t("megaMenu.aik.item1"), href: "#aik" },
+        { label: t("megaMenu.aik.item2"), href: "#aik" },
+        { label: t("megaMenu.aik.item3"), href: "#aik" },
+        { label: t("megaMenu.aik.item4"), href: "#masjid-amal-mulya" },
+        { label: t("megaMenu.aik.item5"), href: "#masjid-amal-mulya" },
+        { label: t("megaMenu.aik.item6"), href: "#masjid-amal-mulya" },
       ],
-      ctaLabel: "Pelajari Lebih Lanjut Nilai-Nilai Al-Islam & Kemuhammadiyahan",
-      ctaLink: "/aik",
+      ctaLabel: t("megaMenu.aik.promoCta"),
+      ctaLink: "#aik",
     };
   }
 
   return (
     <div
-      className="absolute left-0 right-0 top-full w-full z-50 bg-[#1A2A5B] border-b border-white/10 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200"
+      className="absolute left-0 right-0 top-full w-full z-[110] bg-[#1A2A5B] border-b border-white/10 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200"
       onMouseLeave={onClose}
     >
-      {/* Container Inner Padding (Edge-to-Edge Panel with Clean Inner Layout) */}
+      {/* Container Inner Padding */}
       <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 py-10 lg:py-12">
         
-        {/* 2-COLUMN LAYOUT (Kiri: ~25% Kategori Utama, Kanan: ~75% Sub-Items) */}
+        {/* 2-COLUMN LAYOUT */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
           
           {/* KOLOM KIRI (Kategori Utama) */}
@@ -92,8 +105,11 @@ export default function MegaMenu({ activeMenu, onClose }: MegaMenuProps) {
             {menuData.mainCategories.map((cat, idx) => (
               <a
                 key={idx}
-                href="#"
-                className="font-bold text-base sm:text-[17px] text-white inline-flex items-center justify-between group transition-all hover:underline hover:underline-offset-4 hover:decoration-2"
+                href={cat.href}
+                target={cat.isExternal ? "_blank" : undefined}
+                rel={cat.isExternal ? "noopener noreferrer" : undefined}
+                onClick={(e) => handleAnchorClick(e, cat.href, cat.isExternal)}
+                className="font-bold text-base sm:text-[17px] text-white inline-flex items-center justify-between group transition-all hover:underline hover:underline-offset-4 hover:decoration-2 cursor-pointer"
               >
                 <span>{cat.label}</span>
                 {cat.isExternal ? (
@@ -109,16 +125,17 @@ export default function MegaMenu({ activeMenu, onClose }: MegaMenuProps) {
             ))}
           </div>
 
-          {/* KOLOM KANAN (Sub-Items Flat List) */}
+          {/* KOLOM KANAN (Sub-Items Quick Links) */}
           <div className="lg:col-span-9 flex flex-col justify-start">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
               {menuData.subItems.map((item, idx) => (
                 <a
                   key={idx}
-                  href="#"
-                  className="font-bold text-base text-white/90 hover:text-white hover:underline underline-offset-4 decoration-2 transition-all py-1"
+                  href={item.href}
+                  onClick={(e) => handleAnchorClick(e, item.href)}
+                  className="font-bold text-base text-white/90 hover:text-white hover:underline underline-offset-4 decoration-2 transition-all py-1 cursor-pointer"
                 >
-                  {item}
+                  {item.label}
                 </a>
               ))}
             </div>
@@ -126,13 +143,14 @@ export default function MegaMenu({ activeMenu, onClose }: MegaMenuProps) {
 
         </div>
 
-        {/* CTA SECTION (Bawah, Full-Width Row) */}
+        {/* CTA SECTION */}
         <div className="pt-8 mt-10 border-t border-white/10 flex items-center justify-between">
           <a
             href={menuData.ctaLink}
-            className="inline-flex items-center space-x-3.5 group"
+            onClick={(e) => handleAnchorClick(e, menuData.ctaLink)}
+            className="inline-flex items-center space-x-3.5 group cursor-pointer"
           >
-            {/* Circular Icon Button (Thin 1px White Border, Amber Arrow inside) */}
+            {/* Circular Icon Button */}
             <div className="w-9 h-9 rounded-full border border-white/30 flex items-center justify-center text-amber-400 group-hover:border-amber-400 group-hover:bg-amber-400/10 transition-all shrink-0">
               <svg
                 className="w-4 h-4 text-amber-400 group-hover:translate-x-0.5 transition-transform"

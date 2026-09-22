@@ -4,16 +4,17 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
+import MarqueeBanner from "@/components/MarqueeBanner";
 
 // SECTION 2 BILINGUAL CONTENT DATA STRUCTURE
 export const section2Data = {
   id: {
     headline: {
-      line1: "Bertumbuh dengan Ilmu.",
-      line2: "Berkarya dengan Nilai.",
+      line1: "Mari bertumbuh, berkarya,",
+      line2: "dan berdampak dengan iman.",
     },
     subheadline:
-      "Kehidupan mahasiswa SiberMu adalah ruang untuk belajar, berkembang, berprestasi, dan memberi manfaat dengan berlandaskan nilai Al-Islam dan Kemuhammadiyahan.",
+      "Kehidupan mahasiswa SiberMu adalah ruang untuk belajar, berorganisasi, berprestasi, dan memberi manfaat dengan berlandaskan nilai Al-Islam dan Kemuhammadiyahan.",
     cta: "Jelajahi →",
     statBadgeTitle: "500+ Mahasiswa",
     statBadgeSubtitle: "Aktif & Berprestasi",
@@ -23,11 +24,11 @@ export const section2Data = {
   },
   en: {
     headline: {
-      line1: "Growing Through Knowledge.",
-      line2: "Building Through Values.",
+      line1: "Let's grow, create,",
+      line2: "and transform with faith.",
     },
     subheadline:
-      "Student life at SiberMu is a space to learn, grow, achieve, and give benefit, grounded in the values of Al-Islam and Kemuhammadiyahan.",
+      "Student life at SiberMu is a space to learn, organize, achieve, and make an impact — grounded in the values of Al-Islam and Kemuhammadiyahan.",
     cta: "Explore →",
     statBadgeTitle: "500+ Active &",
     statBadgeSubtitle: "Accomplished Students",
@@ -51,8 +52,9 @@ export default function HeroSecondarySection() {
 
   return (
     <section
+      id="hero-secondary"
       data-theme="light"
-      className="relative lg:sticky lg:top-0 min-h-screen lg:h-screen lg:h-[100dvh] w-full bg-slate-50 text-[#1A2A5B] z-20 flex flex-col justify-center overflow-visible lg:overflow-hidden py-16 sm:py-20 lg:py-0"
+      className="relative lg:sticky lg:top-0 min-h-screen lg:h-screen lg:h-[100dvh] w-full bg-slate-50 text-[#1A2A5B] z-[20] flex flex-col justify-center overflow-visible lg:overflow-hidden py-16 sm:py-20 lg:pt-[calc(var(--header-marquee-total)+1.5rem)] lg:pb-8 scroll-mt-[var(--header-marquee-total)]"
     >
       {/* Subtle Dot Grid Background Pattern with Top-Bottom Fade Mask */}
       <div className="dot-grid-pattern-light" aria-hidden="true" />

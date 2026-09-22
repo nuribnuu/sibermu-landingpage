@@ -7,8 +7,11 @@ export default function ScrollIndicator() {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Check if scroll has passed Section 1 (600vh total height)
-      const section1End = window.innerHeight * 5.2;
+      const heroSection = document.getElementById("hero");
+      let section1End = window.innerHeight * 1.5;
+      if (heroSection) {
+        section1End = heroSection.offsetHeight - window.innerHeight * 1.5;
+      }
       setIsPastSection1(window.scrollY > section1End);
     };
 

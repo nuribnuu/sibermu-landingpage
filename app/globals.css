@@ -13,13 +13,12 @@
 }
 
 :root {
-  --gold-color: #FF9E44;
+  --gold-color: #ff9e44;
   --gold-rgb: 255, 158, 68;
   --header-height: 56px;
   --marquee-height: 38px;
   --header-marquee-total: 94px;
 }
-
 
 @media (min-width: 640px) {
   :root {
@@ -35,17 +34,29 @@
     --marquee-height: 50px;
     --header-marquee-total: 126px;
   }
+
+  /* Section top gold border for Section 3 onwards on screen width > 1024px */
+  #dua-dunia,
+  #life-at-sibermu,
+  #prestasi,
+  #layanan-mahasiswa,
+  #aik,
+  #masjid-amal-mulya,
+  #closing-cta {
+    border-top: 5px solid var(--gold-color);
+  }
 }
 
 .running-text-sticky {
-  position: sticky;
-  top: var(--header-height);
-  z-index: 40;
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 95;
   width: 100%;
 }
 
 .framed-image {
-  border: 7px solid #1A2A5B;
+  border: 7px solid #1a2a5b;
   background-color: #ffffff;
   padding: 6px;
   border-radius: 0px;
@@ -60,6 +71,9 @@ body {
   margin: 0;
   padding: 0;
   width: 100%;
+  max-width: 100vw;
+  overflow-x: clip;
+  position: relative;
 }
 
 html::-webkit-scrollbar,
@@ -76,8 +90,19 @@ body::-webkit-scrollbar {
   }
 }
 
+@keyframes marqueeTextIn {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .animate-marquee {
-  animation: marquee 25s linear infinite;
+  animation: marquee 55s linear infinite;
 }
 
 .animate-marquee:hover {
@@ -104,7 +129,8 @@ body::-webkit-scrollbar {
 }
 
 @keyframes chevron-bounce {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.3;
     transform: translateY(0);
   }
@@ -208,10 +234,26 @@ body::-webkit-scrollbar {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background-image: radial-gradient(circle, rgba(26, 42, 91, 0.1) 1.5px, transparent 1.5px);
+  background-image: radial-gradient(
+    circle,
+    rgba(26, 42, 91, 0.1) 1.5px,
+    transparent 1.5px
+  );
   background-size: 22px 22px;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 15%,
+    black 85%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 15%,
+    black 85%,
+    transparent 100%
+  );
   z-index: 0;
 }
 
@@ -220,14 +262,52 @@ body::-webkit-scrollbar {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1.5px, transparent 1.5px);
+  background-image: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.08) 1.5px,
+    transparent 1.5px
+  );
   background-size: 22px 22px;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 15%,
+    black 85%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 15%,
+    black 85%,
+    transparent 100%
+  );
   z-index: 0;
 }
 
+@keyframes spin-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
 
+.animate-spin-reverse {
+  animation: spin-reverse 10s linear infinite;
+}
 
-
-
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-slide {
+  animation: fadeSlide 0.35s ease-out;
+}

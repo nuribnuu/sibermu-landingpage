@@ -57,7 +57,7 @@ export default function LanguageDropdown({ theme = "dark" }: LanguageDropdownPro
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-3 w-40 rounded-none bg-[#120e36]/95 border border-white/10 shadow-xl z-50 p-1 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+        <div className="absolute right-0 mt-3 w-40 rounded-none bg-[#120e36]/95 border border-white/10 shadow-xl z-[110] p-1 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
           {languages.map((lang) => {
             const isActive = locale === lang.code;
             return (
