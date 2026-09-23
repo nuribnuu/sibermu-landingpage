@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
 import { useInfiniteLoopSlider } from "@/hooks/useInfiniteLoopSlider";
+import { useDynamicSectionHeight } from "@/hooks/useDynamicSectionHeight";
 
 export interface AikCardItem {
   id: string;
@@ -127,7 +128,7 @@ export const aikCardsList: AikCardItem[] = [
       id: "Unit dakwah digital Muhammadiyah yang berintegrasi dengan platform MOOCs SiberMu, menghadirkan pelatihan literasi digital untuk masyarakat umum.",
       en: "Muhammadiyah's digital da'wah unit, integrated with SiberMu's MOOCs platform, offering digital literacy training for the public.",
     },
-    image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=800&auto=format&fit=crop",
+    image: "/section/syiar/psdm.webp",
     link: "https://moocs.sibermu.ac.id/course/view.php?id=130",
     ctaText: { id: "Selengkapnya", en: "Read More" },
   },
@@ -136,6 +137,7 @@ export const aikCardsList: AikCardItem[] = [
 export default function AikSection() {
   const { locale, t } = useLanguage();
   const content = section7AikData[locale] || section7AikData.id;
+  const { containerRef, minHeight, stickyTop } = useDynamicSectionHeight();
 
   const {
     scrollRef,
@@ -159,18 +161,22 @@ export default function AikSection() {
     <section
       id="aik"
       data-theme="dark"
-      className="relative lg:sticky lg:top-0 min-h-screen lg:h-screen lg:h-[100dvh] bg-[#0b091f] text-white z-[70] flex flex-col justify-center overflow-visible lg:overflow-hidden py-16 sm:py-20 lg:pt-[calc(var(--header-marquee-total)+1.5rem)] lg:pb-8 border-t border-white/5 lg:border-t-2 lg:border-[#ff9e44] scroll-mt-[var(--header-marquee-total)]"
+      style={{
+        ...(minHeight ? { minHeight: `${minHeight}px` } : {}),
+        ...(stickyTop !== null ? { top: `${stickyTop}px` } : {}),
+      }}
+      className="relative lg:sticky lg:top-0 min-h-screen w-full bg-[#0b091f] text-white z-[70] flex flex-col justify-center overflow-visible lg:overflow-visible py-16 sm:py-20 lg:pt-[calc(var(--header-marquee-total)+1.5rem)] lg:pb-8 border-t border-white/5 lg:border-t-2 lg:border-[#ff9e44] scroll-mt-[var(--header-marquee-total)]"
     >
       {/* Dot Grid Background Pattern */}
       <div className="dot-grid-pattern-dark" aria-hidden="true" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-amber-500/10 rounded-full blur-[140px] pointer-events-none" />
 
       {/* Main Container */}
-      <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 relative z-10">
+      <div ref={containerRef} className="w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 relative z-10">
         
         {/* HEADER BLOCK */}
         <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
-          <h2 className="font-bold text-4xl sm:text-5xl lg:text-[50px] text-white leading-[1.2] tracking-tight mb-3">
+          <h2 className="font-bold text-4xl sm:text-5xl lg:text-[clamp(2.25rem,3.5vw,3.125rem)] text-white leading-[1.2] tracking-tight mb-3">
             <span className="headline-marker headline-marker-1">
               {t("section7.headline") || content.headline}
             </span>
@@ -223,11 +229,11 @@ export default function AikSection() {
               return (
                 <div
                   key={item.uniqueKey}
-                  className="w-[calc(50%-8px)] sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)] lg:w-[calc(25%-18px)] flex-shrink-0 bg-white text-[#1A2A5B] p-5 rounded-none border-[3.5px] border-black shadow-[6px_6px_0px_#000000] flex flex-col justify-between group transition-all duration-300 hover:-translate-y-1 hover:shadow-[9px_9px_0px_#000000]"
+                  className="w-[calc(50%-8px)] sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)] lg:w-[calc(25%-18px)] flex-shrink-0 bg-white text-[#1A2A5B] p-3.5 sm:p-5 rounded-none border-[3.5px] border-black shadow-[6px_6px_0px_#000000] flex flex-col justify-between h-full group transition-all duration-300 hover:-translate-y-1 hover:shadow-[9px_9px_0px_#000000]"
                 >
-                  <div>
+                  <div className="flex-1 flex flex-col min-h-0 mb-3 sm:mb-4">
                     {/* IMAGE FRAME WITH NEOBRUTALISM STYLING */}
-                    <div className="relative w-full aspect-[16/10] neobrutalist-frame p-1 rounded-none mb-4 overflow-hidden">
+                    <div className="relative w-full aspect-[16/10] neobrutalist-frame p-1 rounded-none mb-3 sm:mb-4 overflow-hidden shrink-0">
                       <div className="relative w-full h-full overflow-hidden rounded-none">
                         <Image
                           src={item.image}
@@ -241,17 +247,17 @@ export default function AikSection() {
                     </div>
 
                     {/* CATEGORY LABEL BADGE */}
-                    <span className="inline-block text-[11px] font-extrabold uppercase tracking-wider text-[#FF9E44] bg-black px-2.5 py-1 mb-2">
+                    <span className="inline-block text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-[#FF9E44] bg-black px-2 sm:px-2.5 py-0.5 sm:py-1 mb-1.5 sm:mb-2 w-fit shrink-0">
                       {label}
                     </span>
 
                     {/* CARD TITLE */}
-                    <h3 className="font-bold text-base sm:text-lg text-[#1A2A5B] leading-snug mb-2">
+                    <h3 className="font-bold text-xs sm:text-base lg:text-lg text-[#1A2A5B] leading-snug mb-1.5 sm:mb-2 line-clamp-2">
                       {cardTitle}
                     </h3>
 
                     {/* CARD DESCRIPTION */}
-                    <p className="text-[#706F6F] text-xs sm:text-sm leading-relaxed mb-4">
+                    <p className="text-[#706F6F] text-[11px] sm:text-xs lg:text-sm leading-snug sm:leading-relaxed font-normal line-clamp-3 sm:line-clamp-4">
                       {cardDesc}
                     </p>
                   </div>
@@ -266,7 +272,7 @@ export default function AikSection() {
                         e.preventDefault();
                       }
                     }}
-                    className="self-start w-fit inline-flex items-center space-x-2 text-xs sm:text-sm font-bold text-black bg-[#FF9E44] px-3.5 py-2 border-2 border-black hover:bg-black hover:text-white transition-colors mt-auto"
+                    className="self-start w-fit inline-flex items-center space-x-1.5 sm:space-x-2 text-[11px] sm:text-xs lg:text-sm font-bold text-black bg-[#FF9E44] px-2.5 sm:px-3.5 py-1.5 sm:py-2 border-2 border-black hover:bg-black hover:text-white transition-colors mt-auto shrink-0"
                   >
                     <span>{cta}</span>
                     <span>→</span>

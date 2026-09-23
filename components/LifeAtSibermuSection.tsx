@@ -3,16 +3,54 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
 import { useLanguage } from "@/context/LanguageContext";
+import { useDynamicSectionHeight } from "@/hooks/useDynamicSectionHeight";
 
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 export interface LifeAtCard {
-  number: string;
+  icon?: string;
   title: string;
   description: string;
   isComingSoon?: boolean;
   comingSoonMessage?: string;
+}
+
+function CardIcon({ name, className = "w-5 h-5 text-black" }: { name?: string; className?: string }) {
+  switch (name) {
+    case "users":
+      return (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+      );
+    case "globe":
+      return (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+        </svg>
+      );
+    case "business":
+      return (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+        </svg>
+      );
+    case "creator":
+      return (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+        </svg>
+      );
+    case "code":
+      return (
+        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+        </svg>
+      );
+    default:
+      return null;
+  }
 }
 
 export const section4Data = {
@@ -22,7 +60,7 @@ export const section4Data = {
       "Di SiberMu, mahasiswa memiliki ruang untuk mengembangkan kepemimpinan dan kolaborasi melalui organisasi mahasiswa, serta menyalurkan minat dan bakat lewat berbagai Unit Kegiatan Mahasiswa (UKM).",
     cards: [
       {
-        number: "01",
+        icon: "users",
         title: "BEM SiberMu",
         description:
           "Organisasi mahasiswa tertinggi di SiberMu, wadah aspirasi dan kepemimpinan mahasiswa. Segera hadir.",
@@ -30,25 +68,25 @@ export const section4Data = {
         comingSoonMessage: "Organisasi ini akan segera hadir.",
       },
       {
-        number: "02",
+        icon: "globe",
         title: "UKM English Club",
         description:
           "Wadah pengembangan kemampuan bahasa Inggris, debat, dan komunikasi global bagi mahasiswa.",
       },
       {
-        number: "03",
+        icon: "business",
         title: "UKM Business",
         description:
           "Inkubasi wirausaha, kreativitas bisnis digital, dan pengembangan jiwa kepemimpinan finansial.",
       },
       {
-        number: "04",
+        icon: "creator",
         title: "UKM Digital Creator",
         description:
           "Eksplorasi pembuatan konten digital, desain grafis, editing video, dan branding kreatif.",
       },
       {
-        number: "05",
+        icon: "code",
         title: "UKM Coding",
         description:
           "Pusat belajar pemrograman, pengembangan web/aplikasi, dan solusi teknologi masa depan.",
@@ -61,7 +99,7 @@ export const section4Data = {
       "At SiberMu, students have a space to develop leadership and collaboration through student organizations, and to channel their interests and talents through various Student Activity Units (UKM).",
     cards: [
       {
-        number: "01",
+        icon: "users",
         title: "BEM SiberMu (Student Executive Board)",
         description:
           "The highest student organization at SiberMu, a platform for student aspiration and leadership. Coming soon.",
@@ -69,25 +107,25 @@ export const section4Data = {
         comingSoonMessage: "This organization is coming soon.",
       },
       {
-        number: "02",
+        icon: "globe",
         title: "UKM English Club",
         description:
           "A platform for developing English language skills, debate, and global communication for students.",
       },
       {
-        number: "03",
+        icon: "business",
         title: "UKM Business",
         description:
           "Startup incubation, digital business creativity, and the development of financial leadership skills.",
       },
       {
-        number: "04",
+        icon: "creator",
         title: "UKM Digital Creator",
         description:
           "Exploring digital content creation, graphic design, video editing, and creative branding.",
       },
       {
-        number: "05",
+        icon: "code",
         title: "UKM Coding",
         description:
           "A hub for learning programming, web/app development, and future technology solutions.",
@@ -99,6 +137,7 @@ export const section4Data = {
 export default function LifeAtSibermuSection() {
   const { locale, t } = useLanguage();
   const content = section4Data[locale] || section4Data.id;
+  const { containerRef, minHeight, stickyTop } = useDynamicSectionHeight();
   const [activeModalCard, setActiveModalCard] = useState<LifeAtCard | null>(null);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -185,16 +224,15 @@ export default function LifeAtSibermuSection() {
         {/* Modal Header */}
         <div className="flex items-start justify-between mb-5 pb-4 border-b-2 border-black/10">
           <div className="flex items-center space-x-3.5 pr-6">
-            <div className="w-11 h-11 bg-[#FF9E44] border-2 border-black rounded-none shadow-[2px_2px_0px_#000000] flex items-center justify-center text-black font-extrabold text-sm shrink-0">
-              {activeModalCard.number}
-            </div>
+            {activeModalCard.icon && (
+              <div className="w-11 h-11 bg-[#FF9E44] border-2 border-black rounded-none shadow-[2px_2px_0px_#000000] flex items-center justify-center shrink-0">
+                <CardIcon name={activeModalCard.icon} className="w-6 h-6 text-black" />
+              </div>
+            )}
             <div>
               <h3 className="font-bold text-xl text-[#1A2A5B] leading-snug">
                 {activeModalCard.title}
               </h3>
-              <p className="text-xs text-[#706F6F] font-normal mt-0.5">
-                Organisasi Mahasiswa
-              </p>
             </div>
           </div>
 
@@ -228,17 +266,21 @@ export default function LifeAtSibermuSection() {
     <section
       id="life-at-sibermu"
       data-theme="light"
-      className="relative lg:sticky lg:top-0 min-h-screen lg:min-h-screen w-full bg-slate-50 text-[#1A2A5B] z-[40] flex flex-col justify-center overflow-visible lg:overflow-y-auto py-14 sm:py-16 lg:pt-[calc(var(--header-marquee-total)+1.5rem)] lg:pb-10 border-t border-slate-200 lg:border-t-2 lg:border-[#ff9e44] scroll-mt-[var(--header-marquee-total)]"
+      style={{
+        ...(minHeight ? { minHeight: `${minHeight}px` } : {}),
+        ...(stickyTop !== null ? { top: `${stickyTop}px` } : {}),
+      }}
+      className="relative lg:sticky lg:top-0 min-h-screen w-full bg-slate-50 text-[#1A2A5B] z-[40] flex flex-col justify-center overflow-visible lg:overflow-visible py-14 sm:py-16 lg:pt-[calc(var(--header-marquee-total)+1.5rem)] lg:pb-10 border-t border-slate-200 lg:border-t-2 lg:border-[#ff9e44] scroll-mt-[var(--header-marquee-total)]"
     >
       {/* Subtle Dot Grid Background Pattern */}
       <div className="dot-grid-pattern-light" aria-hidden="true" />
 
       {/* Main Container */}
-      <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 relative z-10">
+      <div ref={containerRef} className="w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 relative z-10">
         
         {/* HEADER BLOCK */}
         <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
-          <h2 className="font-bold text-3xl sm:text-4xl lg:text-[46px] text-[#1A2A5B] leading-[1.2] tracking-tight mb-3">
+          <h2 className="font-bold text-3xl sm:text-4xl lg:text-[clamp(2.25rem,3.5vw,3.125rem)] text-[#1A2A5B] leading-[1.2] tracking-tight mb-3">
             <span className="headline-marker headline-marker-1">
               {t("section4.headline") || content.headline}
             </span>
@@ -264,12 +306,14 @@ export default function LifeAtSibermuSection() {
               >
                 <div>
                   <div className="flex items-start justify-between mb-3.5">
-                    {/* NUMBERED BADGE */}
-                    <div className="w-9 h-9 sm:w-10 sm:h-10 neobrutalist-badge flex items-center justify-center text-xs sm:text-sm font-extrabold bg-[#FF9E44] text-black shrink-0 border-2 border-black">
-                      {card.number}
-                    </div>
+                    {/* ICON BADGE */}
+                    {card.icon && (
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 neobrutalist-badge flex items-center justify-center bg-[#FF9E44] text-black shrink-0 border-2 border-black">
+                        <CardIcon name={card.icon} className="w-5 h-5 text-black" />
+                      </div>
+                    )}
 
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-2 ml-auto">
                       {card.isComingSoon && (
                         <span className="text-[10px] sm:text-[11px] font-bold tracking-wide uppercase px-2 py-0.5 bg-amber-100 border border-amber-300 text-amber-800 rounded-none">
                           Soon

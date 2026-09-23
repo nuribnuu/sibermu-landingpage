@@ -14,6 +14,7 @@ import LayananSection from "@/components/LayananSection";
 import AikSection from "@/components/AikSection";
 import MasjidSection from "@/components/MasjidSection";
 import ClosingCtaSection from "@/components/ClosingCtaSection";
+import FooterSection from "@/components/FooterSection";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -87,6 +88,9 @@ export default function Home() {
 
           {/* Section 9: Dark Navy Section - Closing CTA (Sticky top-0, z-index 90, id="closing-cta") */}
           <ClosingCtaSection />
+
+          {/* Section 10: Light Section - Full-Width Footer (id="footer") */}
+          <FooterSection />
         </div>
       </div>
     </main>

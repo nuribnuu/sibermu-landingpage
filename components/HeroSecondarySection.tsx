@@ -5,13 +5,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
 import MarqueeBanner from "@/components/MarqueeBanner";
+import { useDynamicSectionHeight } from "@/hooks/useDynamicSectionHeight";
 
 // SECTION 2 BILINGUAL CONTENT DATA STRUCTURE
 export const section2Data = {
   id: {
     headline: {
       line1: "Mari bertumbuh, berkarya,",
-      line2: "dan berdampak dengan iman.",
+      line2: "dan berdampak dengan keimanan",
     },
     subheadline:
       "Kehidupan mahasiswa SiberMu adalah ruang untuk belajar, berorganisasi, berprestasi, dan memberi manfaat dengan berlandaskan nilai Al-Islam dan Kemuhammadiyahan.",
@@ -25,7 +26,7 @@ export const section2Data = {
   en: {
     headline: {
       line1: "Let's grow, create,",
-      line2: "and transform with faith.",
+      line2: "and transform with faith",
     },
     subheadline:
       "Student life at SiberMu is a space to learn, organize, achieve, and make an impact — grounded in the values of Al-Islam and Kemuhammadiyahan.",
@@ -41,27 +42,32 @@ export const section2Data = {
 export default function HeroSecondarySection() {
   const { locale } = useLanguage();
   const content = section2Data[locale] || section2Data.id;
+  const { containerRef, minHeight, stickyTop } = useDynamicSectionHeight();
 
   const handleScrollToDuaDunia = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    const target = document.getElementById("dua-dunia");
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth" });
-    }
+    const heroEl = document.getElementById("hero");
+    const heroSecEl = document.getElementById("hero-secondary");
+    const top = (heroEl?.offsetHeight || 0) + (heroSecEl?.offsetHeight || 0);
+    window.scrollTo({ top, behavior: "smooth" });
   };
 
   return (
     <section
       id="hero-secondary"
       data-theme="light"
-      className="relative lg:sticky lg:top-0 min-h-screen lg:h-screen lg:h-[100dvh] w-full bg-slate-50 text-[#1A2A5B] z-[20] flex flex-col justify-center overflow-visible lg:overflow-hidden py-16 sm:py-20 lg:pt-[calc(var(--header-marquee-total)+1.5rem)] lg:pb-8 scroll-mt-[var(--header-marquee-total)]"
+      style={{
+        ...(minHeight ? { minHeight: `${minHeight}px` } : {}),
+        ...(stickyTop !== null ? { top: `${stickyTop}px` } : {}),
+      }}
+      className="relative lg:sticky lg:top-0 min-h-screen w-full bg-slate-50 text-[#1A2A5B] z-[20] flex flex-col justify-center overflow-visible lg:overflow-visible py-16 sm:py-20 lg:pt-[calc(var(--header-marquee-total)+1.5rem)] lg:pb-8 scroll-mt-[var(--header-marquee-total)]"
     >
       {/* Subtle Dot Grid Background Pattern with Top-Bottom Fade Mask */}
       <div className="dot-grid-pattern-light" aria-hidden="true" />
 
 
       {/* Main Container */}
-      <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 relative z-10">
+      <div ref={containerRef} className="w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
 
           {/* LEFT COLUMN (~45% on desktop: Headline + Subheadline + CTA) */}
@@ -69,7 +75,7 @@ export default function HeroSecondarySection() {
           <div className="lg:col-span-5 flex flex-col items-center text-center lg:items-start lg:text-left space-y-6 lg:space-y-8">
             
             {/* Headline (Two Lines with Inline Gold Stabilo Highlight - Natural Box-Decoration-Break Wrap) */}
-            <h2 className="font-bold text-4xl sm:text-5xl lg:text-[52px] xl:text-[58px] text-[#1A2A5B] leading-[1.25] sm:leading-[1.2] lg:leading-[1.18] tracking-tight">
+            <h2 className="font-bold text-3xl sm:text-4xl lg:text-[clamp(2.25rem,4vw,3.5rem)] text-[#1A2A5B] leading-[1.25] sm:leading-[1.2] lg:leading-[1.18] tracking-tight">
               <span className="headline-marker headline-marker-1">
                 {content.headline.line1}
               </span>

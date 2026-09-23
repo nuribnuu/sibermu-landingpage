@@ -34,14 +34,27 @@ export default function LanguageDropdown({ theme = "dark" }: LanguageDropdownPro
 
   return (
     <div className="relative inline-block text-left" ref={dropdownRef}>
-      {/* Language Trigger - Text simple "ID" atau "EN" + chevron kecil */}
+      {/* Language Trigger - Globe icon + text "ID" / "EN" + chevron */}
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center space-x-1 bg-transparent border-none text-sm font-medium focus:outline-none cursor-pointer transition-colors duration-300 p-0 shadow-none ${triggerColorClass}`}
+        className={`flex items-center space-x-1.5 bg-transparent border-none text-sm font-medium focus:outline-none cursor-pointer transition-colors duration-300 p-0 shadow-none ${triggerColorClass}`}
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
+        <svg
+          className="w-4 h-4 shrink-0"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M21 12a9 9 0 11-18 0 9 9 0 0118 0zM3.6 9h16.8M3.6 15h16.8M11.5 3a17 17 0 000 18M12.5 3a17 17 0 010 18"
+          />
+        </svg>
         <span>{locale.toUpperCase()}</span>
         <svg
           className={`w-3.5 h-3.5 transition-transform duration-200 ${

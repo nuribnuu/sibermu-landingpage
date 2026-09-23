@@ -4,13 +4,14 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
+import { useDynamicSectionHeight } from "@/hooks/useDynamicSectionHeight";
 
 // SECTION 3 "DUA RUANG. SATU PERJALANAN." BILINGUAL DATA STRUCTURE
 export const section3DuaDuniaData = {
   id: {
     headline: {
-      line1: "Dua Ruang.",
-      line2: "Satu Perjalanan.",
+      line1: "Dua Ruang",
+      line2: "Satu Perjalanan",
     },
     card1: {
       title: "KEMAHASISWAAN",
@@ -29,8 +30,8 @@ export const section3DuaDuniaData = {
   },
   en: {
     headline: {
-      line1: "Two Spaces.",
-      line2: "One Journey.",
+      line1: "Two Spaces",
+      line2: "One Journey",
     },
     card1: {
       title: "STUDENT AFFAIRS",
@@ -52,34 +53,55 @@ export const section3DuaDuniaData = {
 export default function CampusExcellenceSection() {
   const { locale } = useLanguage();
   const content = section3DuaDuniaData[locale] || section3DuaDuniaData.id;
+  const { containerRef, minHeight, stickyTop } = useDynamicSectionHeight();
 
   const handleScrollTo = (
     e: React.MouseEvent<HTMLAnchorElement>,
     targetId: string,
   ) => {
     e.preventDefault();
-    const target = document.getElementById(targetId);
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth" });
+    const sectionIds = [
+      "hero",
+      "hero-secondary",
+      "dua-dunia",
+      "life-at-sibermu",
+      "prestasi",
+      "layanan-mahasiswa",
+      "aik",
+      "masjid-amal-mulya",
+      "closing-cta",
+    ];
+    const targetIndex = sectionIds.indexOf(targetId);
+    let totalTop = 0;
+    if (targetIndex > 0) {
+      for (let i = 0; i < targetIndex; i++) {
+        const sec = document.getElementById(sectionIds[i]);
+        if (sec) totalTop += sec.offsetHeight;
+      }
     }
+    window.scrollTo({ top: totalTop, behavior: "smooth" });
   };
 
   return (
     <section
       id="dua-dunia"
       data-theme="dark"
-      className="relative lg:sticky lg:top-0 min-h-screen lg:h-screen lg:h-[100dvh] bg-[#0b091f] text-white z-[30] flex flex-col justify-center overflow-visible lg:overflow-hidden py-16 sm:py-20 lg:pt-[calc(var(--header-marquee-total)+1.5rem)] lg:pb-8 border-t border-white/5 lg:border-t-2 lg:border-[#ff9e44] scroll-mt-[var(--header-marquee-total)]"
+      style={{
+        ...(minHeight ? { minHeight: `${minHeight}px` } : {}),
+        ...(stickyTop !== null ? { top: `${stickyTop}px` } : {}),
+      }}
+      className="relative lg:sticky lg:top-0 min-h-screen w-full bg-[#0b091f] text-white z-[30] flex flex-col justify-center overflow-visible lg:overflow-visible py-16 sm:py-20 lg:pt-[calc(var(--header-marquee-total)+1.5rem)] lg:pb-8 border-t border-white/5 lg:border-t-2 lg:border-[#ff9e44] scroll-mt-[var(--header-marquee-total)]"
     >
       {/* Subtle Dot Grid Background Pattern with Top-Bottom Fade Mask */}
       <div className="dot-grid-pattern-dark" aria-hidden="true" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none" />
 
       {/* Main Container */}
-      <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 relative z-10">
+      <div ref={containerRef} className="w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 relative z-10">
         {/* HEADLINE BLOCK */}
         {/* Center-aligned headline with Gold Stabilo Highlight */}
         <div className="text-center mb-10 sm:mb-14">
-          <h2 className="font-bold text-4xl sm:text-5xl lg:text-[52px] xl:text-[58px] text-white leading-[1.25] sm:leading-[1.2] lg:leading-[1.18] tracking-tight">
+          <h2 className="font-bold text-4xl sm:text-5xl lg:text-[clamp(2.5rem,3.8vw,3.5rem)] text-white leading-[1.25] sm:leading-[1.2] lg:leading-[1.18] tracking-tight">
             <span className="headline-marker headline-marker-1">
               {content.headline.line1}
             </span>{" "}
@@ -105,13 +127,6 @@ export default function CampusExcellenceSection() {
                     sizes="(max-width: 1024px) 100vw, 45vw"
                     className="object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out rounded-none"
                   />
-                  {/* Subtle Dark/Navy Overlay Shift on Hover */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#1A2A5B]/20 via-transparent to-transparent group-hover:from-[#1A2A5B]/40 transition-colors duration-400 pointer-events-none" />
-                </div>
-
-                {/* NUMBERED CARD BADGE */}
-                <div className="absolute -top-3 -right-3 w-8 h-8 sm:w-9 sm:h-9 neobrutalist-badge flex items-center justify-center text-xs sm:text-sm z-20">
-                  01
                 </div>
               </div>
 
@@ -156,11 +171,6 @@ export default function CampusExcellenceSection() {
                   />
                   {/* Subtle Gold Overlay Shift on Hover */}
                   <div className="absolute inset-0 bg-gradient-to-t from-[#FF9E44]/20 via-transparent to-transparent group-hover:from-[#FF9E44]/40 transition-colors duration-400 pointer-events-none" />
-                </div>
-
-                {/* NUMBERED CARD BADGE */}
-                <div className="absolute -top-3 -right-3 w-8 h-8 sm:w-9 sm:h-9 neobrutalist-badge flex items-center justify-center text-xs sm:text-sm z-20">
-                  02
                 </div>
               </div>
 

@@ -1,30 +1,32 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
 import LanguageDropdown from "@/components/LanguageDropdown";
 import MegaMenu from "@/components/MegaMenu";
 
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
 export default function Header() {
   const { t } = useLanguage();
-  const [activeMegaMenu, setActiveMegaMenu] = useState<"kemahasiswaan" | "layanan" | "aik" | null>(null);
+  const [activeMegaMenu, setActiveMegaMenu] = useState<"kemahasiswaan" | "aik" | null>(null);
   const [headerTheme, setHeaderTheme] = useState<"dark" | "light">("light");
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeNavKey, setActiveNavKey] = useState<string>("home");
 
-  // Mobile Bottom Sheet & Submenu state
+  // Track anchor navigation to prevent layout effect cleanup from snapping back scroll
+  const isNavigatingRef = useRef(false);
+
+  // Mobile Bottom Sheet state
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
-  const [expandedMobileMenu, setExpandedMobileMenu] = useState<string | null>(null);
 
   const navItems = [
     { key: "home", label: t("nav.home"), href: "#hero", hasMega: false },
     { key: "kemahasiswaan", label: t("nav.kemahasiswaan"), href: "#life-at-sibermu", hasMega: true, megaKey: "kemahasiswaan" as const },
-    { key: "prestasi", label: t("nav.prestasi"), href: "#prestasi", hasMega: false },
-    { key: "layanan", label: t("nav.layanan"), href: "#layanan-mahasiswa", hasMega: true, megaKey: "layanan" as const },
     { key: "aik", label: t("nav.aik"), href: "#aik", hasMega: true, megaKey: "aik" as const },
-    { key: "masjid", label: t("nav.masjid"), href: "#masjid-amal-mulya", hasMega: false },
   ];
 
   const handleMouseEnter = (item: (typeof navItems)[0]) => {
@@ -35,26 +37,12 @@ export default function Header() {
     }
   };
 
-  const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    if (href.startsWith("#") || href.startsWith("/#")) {
-      e.preventDefault();
-      const targetId = href.replace(/^\/?#/, "");
-      if (targetId === "hero") {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      } else {
-        const target = document.getElementById(targetId);
-        if (target) {
-          target.scrollIntoView({ behavior: "smooth" });
-        }
-      }
-      setIsBottomSheetOpen(false);
-    }
-  };
+  const getTargetScrollTop = (targetId: string): number => {
+    if (!targetId || targetId === "hero") return 0;
 
-  // Scroll-Spy & Active Section Theme Detector
-  useEffect(() => {
     const sectionIds = [
       "hero",
+      "hero-secondary",
       "dua-dunia",
       "life-at-sibermu",
       "prestasi",
@@ -64,15 +52,77 @@ export default function Header() {
       "closing-cta",
     ];
 
-    const sectionNavMap: Record<string, string> = {
+    const targetIndex = sectionIds.indexOf(targetId);
+    if (targetIndex === -1) {
+      const targetEl = document.getElementById(targetId);
+      return targetEl ? targetEl.getBoundingClientRect().top + window.scrollY : 0;
+    }
+
+    let totalTop = 0;
+    for (let i = 0; i < targetIndex; i++) {
+      const sec = document.getElementById(sectionIds[i]);
+      if (sec) {
+        totalTop += sec.offsetHeight;
+      }
+    }
+
+    const isDesktop = typeof window !== "undefined" && window.innerWidth >= 1024;
+    if (!isDesktop) {
+      const headerMarqueeTotal = parseInt(
+        getComputedStyle(document.documentElement)
+          .getPropertyValue("--header-marquee-total") || "110",
+        10
+      );
+      totalTop = Math.max(0, totalTop - (headerMarqueeTotal || 80));
+    }
+
+    return totalTop;
+  };
+
+  const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith("#") || href.startsWith("/#")) {
+      e.preventDefault();
+      const targetId = href.replace(/^\/?#/, "");
+      
+      isNavigatingRef.current = true;
+      setIsBottomSheetOpen(false);
+      setActiveMegaMenu(null);
+
+      const targetY = getTargetScrollTop(targetId);
+
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: targetY, behavior: "smooth" });
+        setTimeout(() => {
+          isNavigatingRef.current = false;
+        }, 150);
+      });
+    }
+  };
+
+  // Scroll-Spy & Active Section Theme Detector
+  useEffect(() => {
+    const sectionIds = [
+      "hero",
+      "hero-secondary",
+      "dua-dunia",
+      "life-at-sibermu",
+      "prestasi",
+      "layanan-mahasiswa",
+      "aik",
+      "masjid-amal-mulya",
+      "closing-cta",
+    ];
+
+    const sectionNavMap: Record<string, string | null> = {
       hero: "home",
+      "hero-secondary": "home",
       "dua-dunia": "home",
       "life-at-sibermu": "kemahasiswaan",
-      prestasi: "prestasi",
-      "layanan-mahasiswa": "layanan",
+      prestasi: "kemahasiswaan",
+      "layanan-mahasiswa": "kemahasiswaan",
       aik: "aik",
-      "masjid-amal-mulya": "masjid",
-      "closing-cta": "home",
+      "masjid-amal-mulya": "aik",
+      "closing-cta": null,
     };
 
     const sections = document.querySelectorAll("[data-theme]");
@@ -100,35 +150,55 @@ export default function Header() {
 
     sections.forEach((sec) => themeObserver.observe(sec));
 
-    // Scroll Spy Observer
-    const spyObserver = new IntersectionObserver(
-      (entries) => {
-        const visible = entries.filter((e) => e.isIntersecting);
-        if (visible.length === 0) return;
+    // Scroll Spy Handler (Works bidirectionally on scroll UP & DOWN for sticky stacked layout)
+    let ticking = false;
 
-        const topEntry = visible.reduce((prev, curr) =>
-          curr.intersectionRatio > prev.intersectionRatio ? curr : prev
-        );
+    const handleScrollSpy = () => {
+      const headerMarqueeTotal = parseInt(
+        getComputedStyle(document.documentElement)
+          .getPropertyValue("--header-marquee-total") || "110",
+        10
+      );
+      const targetY = (headerMarqueeTotal || 80) + 50;
 
-        const id = topEntry.target.id;
-        if (id && sectionNavMap[id]) {
-          setActiveNavKey(sectionNavMap[id]);
+      let currentActiveId: string | null = null;
+
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const rect = el.getBoundingClientRect();
+
+        // In a top-to-bottom list of sticky stacking sections:
+        // The active section is the LAST section in DOM order whose top edge has reached targetY
+        if (rect.top <= targetY) {
+          currentActiveId = id;
         }
-      },
-      {
-        rootMargin: "-20% 0px -60% 0px",
-        threshold: [0.1, 0.25, 0.5, 0.75],
       }
-    );
 
-    sectionIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) spyObserver.observe(el);
-    });
+      if (currentActiveId && sectionNavMap[currentActiveId] !== undefined) {
+        const navKey = sectionNavMap[currentActiveId];
+        setActiveNavKey(navKey || "");
+      } else {
+        setActiveNavKey("");
+      }
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScrollSpy();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    handleScrollSpy();
+    window.addEventListener("scroll", onScroll, { passive: true });
 
     return () => {
       themeObserver.disconnect();
-      spyObserver.disconnect();
+      window.removeEventListener("scroll", onScroll);
     };
   }, []);
 
@@ -140,9 +210,56 @@ export default function Header() {
 
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
-
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Synchronous Layout Effect for Position-Fixed Mobile Bottom Sheet Scroll Lock & Instant Restoration
+  useIsomorphicLayoutEffect(() => {
+    if (isBottomSheetOpen) {
+      const scrollY = window.scrollY;
+      const root = document.documentElement;
+      const body = document.body;
+
+      const origHtmlOverflow = root.style.overflow;
+      const origBodyOverflow = body.style.overflow;
+      const origBodyPosition = body.style.position;
+      const origBodyTop = body.style.top;
+      const origBodyWidth = body.style.width;
+      const origBodyLeft = body.style.left;
+      const origScrollBehavior = root.style.scrollBehavior;
+
+      root.style.overflow = "hidden";
+      body.style.overflow = "hidden";
+      body.style.position = "fixed";
+      body.style.top = `-${scrollY}px`;
+      body.style.width = "100%";
+      body.style.left = "0";
+
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          setIsBottomSheetOpen(false);
+        }
+      };
+      window.addEventListener("keydown", handleKeyDown);
+
+      return () => {
+        root.style.overflow = origHtmlOverflow;
+        body.style.overflow = origBodyOverflow;
+        body.style.position = origBodyPosition;
+        body.style.top = origBodyTop;
+        body.style.width = origBodyWidth;
+        body.style.left = origBodyLeft;
+
+        if (!isNavigatingRef.current) {
+          root.style.scrollBehavior = "auto";
+          window.scrollTo({ top: scrollY, left: 0, behavior: "instant" });
+          root.style.scrollBehavior = origScrollBehavior;
+        }
+
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    }
+  }, [isBottomSheetOpen]);
 
   // Dynamic ResizeObserver to handle browser zoom (Ctrl +/-), resize, and reflow
   useEffect(() => {
@@ -259,6 +376,22 @@ export default function Header() {
                   onClick={(e) => handleAnchorClick(e, item.href)}
                   className={`text-[14px] sm:text-[15px] font-medium transition-colors duration-300 ease-in-out flex items-center space-x-1.5 cursor-pointer ${textColorClass}`}
                 >
+                  {item.key === "home" && (
+                    <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                  )}
+                  {item.key === "kemahasiswaan" && (
+                    <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M12 14l9-5-9-5-9 5 9 5z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                    </svg>
+                  )}
+                  {item.key === "aik" && (
+                    <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                  )}
                   <span>{item.label}</span>
                   {item.hasMega && (
                     <svg
@@ -282,8 +415,9 @@ export default function Header() {
         <div className="hidden lg:flex items-center space-x-5 shrink-0">
           <LanguageDropdown theme={headerTheme} />
           <a
-            href="#closing-cta"
-            onClick={(e) => handleAnchorClick(e, "#closing-cta")}
+            href="https://admissions.sibermu.ac.id/"
+            target="_blank"
+            rel="noopener noreferrer"
             className={`font-medium text-sm transition-colors duration-300 whitespace-nowrap cursor-pointer ${
               isLight
                 ? "text-[#1A2A5B] hover:text-[#1A2A5B] hover:underline hover:underline-offset-4 hover:decoration-2"
@@ -295,8 +429,20 @@ export default function Header() {
         </div>
 
         {/* MOBILE TOP ACTIONS */}
-        <div className="flex lg:hidden items-center">
+        <div className="flex lg:hidden items-center space-x-3 sm:space-x-4 shrink-0">
           <LanguageDropdown theme={headerTheme} />
+          <a
+            href="https://admissions.sibermu.ac.id/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`font-medium text-xs sm:text-sm transition-colors duration-300 whitespace-nowrap cursor-pointer ${
+              isLight
+                ? "text-[#1A2A5B] hover:text-[#1A2A5B] hover:underline hover:underline-offset-4 hover:decoration-2"
+                : "text-white hover:text-white hover:underline hover:underline-offset-4 hover:decoration-2"
+            }`}
+          >
+            {t("nav.register")}
+          </a>
         </div>
 
         {/* Mega Menu Overlay (Desktop) */}
@@ -309,7 +455,7 @@ export default function Header() {
         <a
           href="#hero"
           onClick={(e) => handleAnchorClick(e, "#hero")}
-          className="flex flex-col items-center justify-center space-y-1 w-14 transition-colors cursor-pointer relative group"
+          className="flex flex-col items-center justify-center text-center space-y-1 w-20 sm:w-24 px-1 transition-colors cursor-pointer relative group"
         >
           <div className={`absolute -top-6 w-11 h-11 rounded-none flex items-center justify-center border-[3.5px] border-[#120e36] shadow-[0_4px_14px_rgba(255,158,68,0.45)] transition-all duration-200 group-hover:scale-105 group-active:scale-95 ${
             activeNavKey === "home"
@@ -323,80 +469,63 @@ export default function Header() {
           <svg className="w-5 h-5 opacity-0" fill="none" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M0 0h24v24H0z" />
           </svg>
-          <span className={`text-[11px] tracking-tight transition-colors ${
+          <span className={`text-[10px] sm:text-[11px] leading-[1.15] text-center transition-colors w-full flex items-center justify-center h-[26px] break-words ${
             activeNavKey === "home" ? "text-amber-400 font-semibold" : "text-white font-normal"
           }`}>{t("nav.home")}</span>
         </a>
 
-        {/* 2. Prestasi */}
+        {/* 2. Kemahasiswaan */}
         <a
-          href="#prestasi"
-          onClick={(e) => handleAnchorClick(e, "#prestasi")}
-          className="flex flex-col items-center justify-center space-y-1 w-14 transition-colors cursor-pointer relative group"
+          href="#life-at-sibermu"
+          onClick={(e) => handleAnchorClick(e, "#life-at-sibermu")}
+          className="flex flex-col items-center justify-center text-center space-y-1 w-20 sm:w-24 px-1 transition-colors cursor-pointer relative group"
         >
           <div className={`absolute -top-6 w-11 h-11 rounded-none flex items-center justify-center border-[3.5px] border-[#120e36] shadow-[0_4px_14px_rgba(255,158,68,0.45)] transition-all duration-200 group-hover:scale-105 group-active:scale-95 ${
-            activeNavKey === "prestasi"
+            activeNavKey === "kemahasiswaan"
               ? "bg-[#FF9E44] text-[#120e36] scale-105 ring-2 ring-[#FF9E44]/50"
               : "bg-[#FF9E44] text-[#120e36]"
           }`}>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M12 15a7 7 0 007-7V4H5v4a7 7 0 007 7zm0 0v4m-4 2h8M5 4H3a2 2 0 00-2 2v1a4 4 0 004 4m14-7h2a2 2 0 012 2v1a4 4 0 01-4 4" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M12 14l9-5-9-5-9 5 9 5z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
             </svg>
           </div>
           <svg className="w-5 h-5 opacity-0" fill="none" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M0 0h24v24H0z" />
           </svg>
-          <span className={`text-[11px] tracking-tight transition-colors ${
-            activeNavKey === "prestasi" ? "text-amber-400 font-semibold" : "text-white font-normal"
-          }`}>{t("nav.prestasi")}</span>
+          <span className={`text-[10px] sm:text-[11px] leading-[1.15] text-center transition-colors w-full flex items-center justify-center h-[26px] break-words ${
+            activeNavKey === "kemahasiswaan" ? "text-amber-400 font-semibold" : "text-white font-normal"
+          }`}>{t("nav.kemahasiswaan")}</span>
         </a>
 
-        {/* 3. Daftar */}
-        <a
-          href="#closing-cta"
-          onClick={(e) => handleAnchorClick(e, "#closing-cta")}
-          className="flex flex-col items-center justify-center space-y-1 w-14 transition-colors cursor-pointer relative group"
-        >
-          {/* Floating Gold Circle Icon elevated higher (-top-6) above navbar border */}
-          <div className="absolute -top-6 w-11 h-11 bg-[#FF9E44] text-[#120e36] rounded-none flex items-center justify-center border-[3.5px] border-[#120e36] shadow-[0_4px_14px_rgba(255,158,68,0.45)] transition-transform duration-200 group-hover:scale-105 group-active:scale-95">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-          </div>
-          <svg className="w-5 h-5 opacity-0" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M0 0h24v24H0z" />
-          </svg>
-          <span className="text-[11px] tracking-tight text-white font-normal transition-colors group-hover:text-amber-400">{t("nav.register")}</span>
-        </a>
-
-        {/* 4. AIK / Masjid */}
+        {/* 3. AIK */}
         <a
           href="#aik"
           onClick={(e) => handleAnchorClick(e, "#aik")}
-          className="flex flex-col items-center justify-center space-y-1 w-14 transition-colors cursor-pointer relative group"
+          className="flex flex-col items-center justify-center text-center space-y-1 w-20 sm:w-24 px-1 transition-colors cursor-pointer relative group"
         >
           <div className={`absolute -top-6 w-11 h-11 rounded-none flex items-center justify-center border-[3.5px] border-[#120e36] shadow-[0_4px_14px_rgba(255,158,68,0.45)] transition-all duration-200 group-hover:scale-105 group-active:scale-95 ${
-            activeNavKey === "aik" || activeNavKey === "masjid"
+            activeNavKey === "aik"
               ? "bg-[#FF9E44] text-[#120e36] scale-105 ring-2 ring-[#FF9E44]/50"
               : "bg-[#FF9E44] text-[#120e36]"
           }`}>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
           </div>
           <svg className="w-5 h-5 opacity-0" fill="none" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M0 0h24v24H0z" />
           </svg>
-          <span className={`text-[11px] tracking-tight transition-colors ${
-            activeNavKey === "aik" || activeNavKey === "masjid" ? "text-amber-400 font-semibold" : "text-white font-normal"
-          }`}>AIK</span>
+          <span className={`text-[10px] sm:text-[11px] leading-[1.15] text-center transition-colors w-full flex items-center justify-center h-[26px] break-words ${
+            activeNavKey === "aik" ? "text-amber-400 font-semibold" : "text-white font-normal"
+          }`}>{t("nav.aik")}</span>
         </a>
 
-        {/* 5. More */}
+        {/* 4. More */}
         <button
           type="button"
           onClick={() => setIsBottomSheetOpen(true)}
-          className="flex flex-col items-center justify-center space-y-1 w-14 transition-colors relative group cursor-pointer"
+          className="flex flex-col items-center justify-center text-center space-y-1 w-20 sm:w-24 px-1 transition-colors relative group cursor-pointer"
         >
           <div className={`absolute -top-6 w-11 h-11 rounded-none flex items-center justify-center border-[3.5px] border-[#120e36] shadow-[0_4px_14px_rgba(255,158,68,0.45)] transition-all duration-200 group-hover:scale-105 group-active:scale-95 ${
             isBottomSheetOpen
@@ -410,9 +539,9 @@ export default function Header() {
           <svg className="w-5 h-5 opacity-0" fill="none" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M0 0h24v24H0z" />
           </svg>
-          <span className={`text-[11px] tracking-tight transition-colors ${
+          <span className={`text-[10px] sm:text-[11px] leading-[1.15] text-center transition-colors w-full flex items-center justify-center h-[26px] break-words ${
             isBottomSheetOpen ? "text-amber-400 font-semibold" : "text-white font-normal"
-          }`}>More</span>
+          }`}>{t("nav.more")}</span>
         </button>
       </div>
 
@@ -420,132 +549,70 @@ export default function Header() {
       {isBottomSheetOpen && (
         <div className="lg:hidden">
           <div
-            className="fixed inset-0 bg-black/60 z-[110] animate-in fade-in duration-200"
-            onClick={() => {
-              setIsBottomSheetOpen(false);
-              setExpandedMobileMenu(null);
-            }}
+            className="fixed inset-0 bg-black/60 z-[110] animate-in fade-in duration-200 touch-none"
+            onClick={() => setIsBottomSheetOpen(false)}
           />
 
-          <div className="fixed inset-x-0 bottom-0 z-[120] bg-[#120e36] border-t border-white/10 rounded-t-3xl p-6 shadow-2xl animate-in slide-in-from-bottom duration-300 ease-out max-h-[85vh] overflow-y-auto">
+          <div className="fixed inset-x-0 bottom-0 z-[120] bg-[#120e36] border-t border-white/10 rounded-t-3xl p-6 shadow-2xl animate-in slide-in-from-bottom duration-300 ease-out max-h-[85vh] overflow-y-auto overscroll-contain">
             <div className="w-12 h-1.5 bg-white/30 rounded-none mx-auto mb-5" />
 
             <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
-              <button
-                type="button"
-                onClick={() => {
-                  if (expandedMobileMenu) {
-                    setExpandedMobileMenu(null);
-                  } else {
-                    setIsBottomSheetOpen(false);
-                  }
-                }}
-                className="text-white/70 hover:text-white p-1"
-              >
-                {expandedMobileMenu ? (
-                  <span className="text-sm font-semibold flex items-center gap-1">
-                    ← Kembali
-                  </span>
-                ) : (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                )}
-              </button>
-
               <h3 className="text-base font-bold text-white tracking-wide">
-                {expandedMobileMenu
-                  ? navItems.find((n) => n.key === expandedMobileMenu)?.label
-                  : "Menu Utama"}
+                {t("nav.more")}
               </h3>
 
-              <div className="w-8" />
+              <button
+                type="button"
+                onClick={() => setIsBottomSheetOpen(false)}
+                className="text-white/70 hover:text-white p-1"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
 
-            <div className="flex flex-col">
-              {!expandedMobileMenu ? (
-                <>
-                  <button
-                    type="button"
-                    onClick={() => setExpandedMobileMenu("kemahasiswaan")}
-                    className="py-4 text-base font-medium text-white border-b border-white/10 flex items-center justify-between hover:bg-white/5 px-2 rounded-lg transition-colors"
-                  >
-                    <span>{t("nav.kemahasiswaan")}</span>
-                    <span className="text-white/60 text-lg">›</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setExpandedMobileMenu("layanan")}
-                    className="py-4 text-base font-medium text-white border-b border-white/10 flex items-center justify-between hover:bg-white/5 px-2 rounded-lg transition-colors"
-                  >
-                    <span>{t("nav.layanan")}</span>
-                    <span className="text-white/60 text-lg">›</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setExpandedMobileMenu("aik")}
-                    className="py-4 text-base font-medium text-white flex items-center justify-between hover:bg-white/5 px-2 rounded-lg transition-colors"
-                  >
-                    <span>{t("nav.aik")}</span>
-                    <span className="text-white/60 text-lg">›</span>
-                  </button>
-                </>
-              ) : (
-                <div className="flex flex-col space-y-2 py-2">
-                  {expandedMobileMenu === "kemahasiswaan" && (
-                    <>
-                      <a href="#life-at-sibermu" onClick={(e) => handleAnchorClick(e, "#life-at-sibermu")} className="py-3 text-sm font-medium text-slate-200 hover:text-white border-b border-white/10">
-                        {t("megaMenu.kemahasiswaan.item1")}
-                      </a>
-                      <a href="#life-at-sibermu" onClick={(e) => handleAnchorClick(e, "#life-at-sibermu")} className="py-3 text-sm font-medium text-slate-200 hover:text-white border-b border-white/10">
-                        {t("megaMenu.kemahasiswaan.item2")}
-                      </a>
-                      <a href="#prestasi" onClick={(e) => handleAnchorClick(e, "#prestasi")} className="py-3 text-sm font-medium text-slate-200 hover:text-white border-b border-white/10">
-                        {t("megaMenu.kemahasiswaan.item3")}
-                      </a>
-                      <a href="#layanan-mahasiswa" onClick={(e) => handleAnchorClick(e, "#layanan-mahasiswa")} className="py-3 text-sm font-medium text-slate-200 hover:text-white">
-                        {t("megaMenu.kemahasiswaan.item4")}
-                      </a>
-                    </>
-                  )}
-
-                  {expandedMobileMenu === "layanan" && (
-                    <>
-                      <a href="#layanan-mahasiswa" onClick={(e) => handleAnchorClick(e, "#layanan-mahasiswa")} className="py-3 text-sm font-medium text-slate-200 hover:text-white border-b border-white/10">
-                        {t("megaMenu.layanan.item1")}
-                      </a>
-                      <a href="#layanan-mahasiswa" onClick={(e) => handleAnchorClick(e, "#layanan-mahasiswa")} className="py-3 text-sm font-medium text-slate-200 hover:text-white border-b border-white/10">
-                        {t("megaMenu.layanan.item2")}
-                      </a>
-                      <a href="#layanan-mahasiswa" onClick={(e) => handleAnchorClick(e, "#layanan-mahasiswa")} className="py-3 text-sm font-medium text-slate-200 hover:text-white border-b border-white/10">
-                        {t("megaMenu.layanan.item3")}
-                      </a>
-                      <a href="#layanan-mahasiswa" onClick={(e) => handleAnchorClick(e, "#layanan-mahasiswa")} className="py-3 text-sm font-medium text-slate-200 hover:text-white">
-                        {t("megaMenu.layanan.item4")}
-                      </a>
-                    </>
-                  )}
-
-                  {expandedMobileMenu === "aik" && (
-                    <>
-                      <a href="#aik" onClick={(e) => handleAnchorClick(e, "#aik")} className="py-3 text-sm font-medium text-slate-200 hover:text-white border-b border-white/10">
-                        {t("megaMenu.aik.item1")}
-                      </a>
-                      <a href="#aik" onClick={(e) => handleAnchorClick(e, "#aik")} className="py-3 text-sm font-medium text-slate-200 hover:text-white border-b border-white/10">
-                        {t("megaMenu.aik.item2")}
-                      </a>
-                      <a href="#aik" onClick={(e) => handleAnchorClick(e, "#aik")} className="py-3 text-sm font-medium text-slate-200 hover:text-white border-b border-white/10">
-                        {t("megaMenu.aik.item3")}
-                      </a>
-                      <a href="#masjid-amal-mulya" onClick={(e) => handleAnchorClick(e, "#masjid-amal-mulya")} className="py-3 text-sm font-medium text-slate-200 hover:text-white">
-                        {t("megaMenu.aik.item4")}
-                      </a>
-                    </>
-                  )}
-                </div>
-              )}
+            <div className="flex flex-col space-y-1 py-2">
+              <a
+                href="#life-at-sibermu"
+                onClick={(e) => handleAnchorClick(e, "#life-at-sibermu")}
+                className="py-3.5 px-3 text-sm font-medium text-slate-200 hover:text-white hover:bg-white/5 border-b border-white/10 flex items-center justify-between transition-colors"
+              >
+                <span>{t("megaMenu.kemahasiswaan.item1")}</span>
+                <span className="text-[#FF9E44]">→</span>
+              </a>
+              <a
+                href="#prestasi"
+                onClick={(e) => handleAnchorClick(e, "#prestasi")}
+                className="py-3.5 px-3 text-sm font-medium text-slate-200 hover:text-white hover:bg-white/5 border-b border-white/10 flex items-center justify-between transition-colors"
+              >
+                <span>{t("megaMenu.kemahasiswaan.item2")}</span>
+                <span className="text-[#FF9E44]">→</span>
+              </a>
+              <a
+                href="#layanan-mahasiswa"
+                onClick={(e) => handleAnchorClick(e, "#layanan-mahasiswa")}
+                className="py-3.5 px-3 text-sm font-medium text-slate-200 hover:text-white hover:bg-white/5 border-b border-white/10 flex items-center justify-between transition-colors"
+              >
+                <span>{t("megaMenu.kemahasiswaan.item3")}</span>
+                <span className="text-[#FF9E44]">→</span>
+              </a>
+              <a
+                href="#aik"
+                onClick={(e) => handleAnchorClick(e, "#aik")}
+                className="py-3.5 px-3 text-sm font-medium text-slate-200 hover:text-white hover:bg-white/5 border-b border-white/10 flex items-center justify-between transition-colors"
+              >
+                <span>{t("megaMenu.aik.item1")}</span>
+                <span className="text-[#FF9E44]">→</span>
+              </a>
+              <a
+                href="#masjid-amal-mulya"
+                onClick={(e) => handleAnchorClick(e, "#masjid-amal-mulya")}
+                className="py-3.5 px-3 text-sm font-medium text-slate-200 hover:text-white hover:bg-white/5 flex items-center justify-between transition-colors"
+              >
+                <span>{t("megaMenu.aik.item2")}</span>
+                <span className="text-[#FF9E44]">→</span>
+              </a>
             </div>
           </div>
         </div>

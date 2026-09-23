@@ -4,6 +4,7 @@ import React, { useState, useEffect, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
 import { useLanguage } from "@/context/LanguageContext";
 import { useInfiniteLoopSlider } from "@/hooks/useInfiniteLoopSlider";
+import { useDynamicSectionHeight } from "@/hooks/useDynamicSectionHeight";
 
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect;
@@ -386,6 +387,7 @@ function ServiceIcon({ name, className = "w-5 h-5 text-black" }: { name: string;
 
 export default function LayananSection() {
   const { locale, t } = useLanguage();
+  const { containerRef, minHeight, stickyTop } = useDynamicSectionHeight();
   const [activeModalCard, setActiveModalCard] = useState<ServiceCardData | null>(null);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -410,7 +412,7 @@ export default function LayananSection() {
     (locale === "en"
       ? "Full support for the academic journey and personal development of SiberMu students."
       : "Dukungan penuh untuk perjalanan akademik dan pengembangan diri mahasiswa SiberMu.");
-  const seeMoreText = t("section6.seeMore") || (locale === "en" ? "See More →" : "Lihat Selengkapnya →");
+  const seeMoreText = t("section6.seeMore") || (locale === "en" ? "See More →" : " Selengkapnya →");
 
   // Synchronous Layout Effect for Position-Fixed Scroll Lock, Pointer-Events Isolation & Instant Scroll Restoration
   useIsomorphicLayoutEffect(() => {
@@ -571,17 +573,21 @@ export default function LayananSection() {
     <section
       id="layanan-mahasiswa"
       data-theme="light"
-      className="relative lg:sticky lg:top-0 min-h-screen lg:min-h-screen w-full bg-slate-50 text-[#1A2A5B] z-[60] flex flex-col justify-center overflow-visible lg:overflow-hidden py-16 sm:py-20 lg:pt-[calc(var(--header-marquee-total)+1.5rem)] lg:pb-12 border-t border-slate-200 lg:border-t-2 lg:border-[#ff9e44] scroll-mt-[var(--header-marquee-total)]"
+      style={{
+        ...(minHeight ? { minHeight: `${minHeight}px` } : {}),
+        ...(stickyTop !== null ? { top: `${stickyTop}px` } : {}),
+      }}
+      className="relative lg:sticky lg:top-0 min-h-screen w-full bg-slate-50 text-[#1A2A5B] z-[60] flex flex-col justify-center overflow-visible lg:overflow-visible py-16 sm:py-20 lg:pt-[calc(var(--header-marquee-total)+1.5rem)] lg:pb-12 border-t border-slate-200 lg:border-t-2 lg:border-[#ff9e44] scroll-mt-[var(--header-marquee-total)]"
     >
       {/* Subtle Dot Grid Background Pattern */}
       <div className="dot-grid-pattern-light" aria-hidden="true" />
 
       {/* Main Container */}
-      <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 relative z-10">
+      <div ref={containerRef} className="w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 relative z-10">
         
         {/* HEADER BLOCK */}
         <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
-          <h2 className="font-bold text-4xl sm:text-5xl lg:text-[50px] text-[#1A2A5B] leading-[1.2] tracking-tight mb-3">
+          <h2 className="font-bold text-4xl sm:text-5xl lg:text-[clamp(2.25rem,3.5vw,3.125rem)] text-[#1A2A5B] leading-[1.2] tracking-tight mb-3">
             <span className="headline-marker headline-marker-1">
               {headline}
             </span>
@@ -648,11 +654,11 @@ export default function LayananSection() {
                         if (dragDistance > 5) return;
                         handleCardClick(card);
                       }}
-                      className="bg-white p-3.5 sm:p-5 lg:p-6 rounded-none border-[3.5px] border-black shadow-[4px_4px_0px_#000000] sm:shadow-[5px_5px_0px_#000000] flex flex-col justify-between hover:-translate-y-1 hover:shadow-[8px_8px_0px_#000000] transition-all duration-300 group cursor-pointer"
+                      className="bg-white p-3.5 sm:p-5 lg:p-6 rounded-none border-[3.5px] border-black shadow-[4px_4px_0px_#000000] sm:shadow-[5px_5px_0px_#000000] flex flex-col justify-between h-full hover:-translate-y-1 hover:shadow-[8px_8px_0px_#000000] transition-all duration-300 group cursor-pointer"
                     >
-                      <div>
+                      <div className="flex-1 flex flex-col min-h-0 mb-2 sm:mb-4">
                         {/* Top row: Icon Badge */}
-                        <div className="flex items-center justify-between mb-2 sm:mb-3.5">
+                        <div className="flex items-center justify-between mb-2 sm:mb-3.5 shrink-0">
                           <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#FF9E44] border-2 border-black flex items-center justify-center shrink-0 rounded-none shadow-[2px_2px_0px_#000000]">
                             <ServiceIcon name={card.icon} className="w-4 h-4 sm:w-5 sm:h-5 text-black" />
                           </div>
@@ -670,16 +676,16 @@ export default function LayananSection() {
                         </div>
 
                         {/* Title & Description */}
-                        <h3 className="font-bold text-xs sm:text-base lg:text-lg text-[#1A2A5B] leading-tight uppercase mb-1 sm:mb-2 group-hover:text-[#1A2A5B]">
+                        <h3 className="font-bold text-xs sm:text-base lg:text-lg text-[#1A2A5B] leading-tight uppercase mb-1 sm:mb-2 group-hover:text-[#1A2A5B] line-clamp-2">
                           {cardTitle}
                         </h3>
-                        <p className="text-[#706F6F] text-[11px] sm:text-xs lg:text-sm leading-snug sm:leading-relaxed font-normal mb-2 sm:mb-4 line-clamp-2 sm:line-clamp-none">
+                        <p className="text-[#706F6F] text-[11px] sm:text-xs lg:text-sm leading-snug sm:leading-relaxed font-normal line-clamp-2 sm:line-clamp-3 lg:line-clamp-4">
                           {cardDesc}
                         </p>
                       </div>
 
                       {/* Bottom Trigger Link/Button */}
-                      <div className="pt-1.5 sm:pt-2 border-t border-slate-100 flex items-center justify-between mt-auto">
+                      <div className="pt-1.5 sm:pt-2 border-t border-slate-100 flex items-center justify-between mt-auto shrink-0">
                         <span className="font-bold text-[11px] sm:text-xs lg:text-sm text-[#1A2A5B] group-hover:text-[#FF9E44] transition-colors flex items-center space-x-1">
                           <span>{seeMoreText}</span>
                         </span>
