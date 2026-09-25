@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import LoadingScreen from "@/components/LoadingScreen";
 import ScrollSequence from "@/components/ScrollSequence";
 import MarqueeBanner from "@/components/MarqueeBanner";
+import ScrollIndicator from "@/components/ScrollIndicator";
 import HeroSecondarySection from "@/components/HeroSecondarySection";
 import TwoSpacesSection from "@/components/TwoSpacesSection";
 import StudentOrganizationsSection from "@/components/StudentOrganizationsSection";
@@ -58,6 +59,7 @@ export default function Home() {
             onProgress={(p) => setProgress(p)}
             onLoaded={() => setIsLoaded(true)}
           />
+          <ScrollIndicator />
         </section>
 
         {/* Section 2 to Section 9 Track Container for Native Sticky Marquee */}
