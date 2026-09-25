@@ -1,4 +1,8 @@
 export const id = {
+  siteMeta: {
+    title: "Biro Kemahasiswaan & AIK | SIBERMU",
+    description: "Biro Kemahasiswaan dan Al-Islam Kemuhammadiyahan — mendampingi mahasiswa belajar, berkarya, dan bertumbuh tanpa batas.",
+  },
   nav: {
     home: "Beranda",
     kemahasiswaan: "Kemahasiswaan",

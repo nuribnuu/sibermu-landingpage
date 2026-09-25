@@ -6,6 +6,17 @@ import { en } from "@/locales/en";
 
 type Locale = "id" | "en";
 
+export const siteMeta = {
+  id: {
+    title: "Biro Kemahasiswaan & AIK | SIBERMU",
+    description: "Biro Kemahasiswaan dan Al-Islam Kemuhammadiyahan — mendampingi mahasiswa belajar, berkarya, dan bertumbuh tanpa batas.",
+  },
+  en: {
+    title: "Student Affairs & AIK | SIBERMU",
+    description: "Student Affairs and Al-Islam Kemuhammadiyahan Bureau — supporting students to learn, create, and grow without limits.",
+  },
+};
+
 interface LanguageContextType {
   locale: Locale;
   setLocale: (locale: Locale) => void;
@@ -25,6 +36,16 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       setLocaleState(savedLocale);
     }
   }, []);
+
+  useEffect(() => {
+    const meta = siteMeta[locale] || siteMeta.id;
+    document.title = meta.title;
+
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute("content", meta.description);
+    }
+  }, [locale]);
 
   const setLocale = (newLocale: Locale) => {
     setLocaleState(newLocale);

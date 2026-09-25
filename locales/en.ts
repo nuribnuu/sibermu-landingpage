@@ -1,4 +1,8 @@
 export const en = {
+  siteMeta: {
+    title: "Student Affairs & AIK | SIBERMU",
+    description: "Student Affairs and Al-Islam Kemuhammadiyahan Bureau — supporting students to learn, create, and grow without limits.",
+  },
   nav: {
     home: "Home",
     kemahasiswaan: "Student Affairs",

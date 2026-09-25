@@ -4,8 +4,8 @@ import { LanguageProvider } from "@/context/LanguageContext";
 import CustomCursor from "@/components/CustomCursor";
 
 export const metadata: Metadata = {
-  title: "SIBERMU - Digital Experience Universitas Siber Muhammadiyah",
-  description: "Bertumbuh dengan Ilmu, Berkarya dengan Nilai.",
+  title: "Biro Kemahasiswaan & AIK | SIBERMU",
+  description: "Biro Kemahasiswaan dan Al-Islam Kemuhammadiyahan — mendampingi mahasiswa belajar, berkarya, dan bertumbuh tanpa batas.",
 };
 
 export default function RootLayout({
