@@ -5,14 +5,13 @@ import Header from "@/components/Header";
 import LoadingScreen from "@/components/LoadingScreen";
 import ScrollSequence from "@/components/ScrollSequence";
 import MarqueeBanner from "@/components/MarqueeBanner";
-import ScrollIndicator from "@/components/ScrollIndicator";
 import HeroSecondarySection from "@/components/HeroSecondarySection";
-import CampusExcellenceSection from "@/components/CampusExcellenceSection";
-import LifeAtSibermuSection from "@/components/LifeAtSibermuSection";
-import PrestasiSection from "@/components/PrestasiSection";
-import LayananSection from "@/components/LayananSection";
-import AikSection from "@/components/AikSection";
-import MasjidSection from "@/components/MasjidSection";
+import TwoSpacesSection from "@/components/TwoSpacesSection";
+import StudentOrganizationsSection from "@/components/StudentOrganizationsSection";
+import AchievementsSection from "@/components/AchievementsSection";
+import ServicesSection from "@/components/ServicesSection";
+import AikActivitiesSection from "@/components/AikActivitiesSection";
+import CoreValuesSection from "@/components/CoreValuesSection";
 import ClosingCtaSection from "@/components/ClosingCtaSection";
 import FooterSection from "@/components/FooterSection";
 import FloatingContactButton from "@/components/FloatingContactButton";
@@ -59,7 +58,6 @@ export default function Home() {
             onProgress={(p) => setProgress(p)}
             onLoaded={() => setIsLoaded(true)}
           />
-          <ScrollIndicator />
         </section>
 
         {/* Section 2 to Section 9 Track Container for Native Sticky Marquee */}
@@ -75,22 +73,22 @@ export default function Home() {
           <HeroSecondarySection />
 
           {/* Section 3: Dark Navy Section - Dua Ruang. Satu Perjalanan. (Sticky top-0, z-index 30, id="dua-dunia") */}
-          <CampusExcellenceSection />
+          <TwoSpacesSection />
 
           {/* Section 4: Light Section - Life at SIBERMU (Sticky top-0, z-index 40, id="life-at-sibermu") */}
-          <LifeAtSibermuSection />
+          <StudentOrganizationsSection />
 
           {/* Section 5: Dark Navy Section - Prestasi (Sticky top-0, z-index 50, id="prestasi") */}
-          <PrestasiSection />
+          <AchievementsSection />
 
           {/* Section 6: Light Section - Layanan Mahasiswa (Sticky top-0, z-index 60, id="layanan-mahasiswa") */}
-          <LayananSection />
+          <ServicesSection />
 
           {/* Section 7: Dark Navy Section - AIK (Sticky top-0, z-index 70, id="aik") */}
-          <AikSection />
+          <AikActivitiesSection />
 
-          {/* Section 8: Light Section - Masjid Amal Mulya (Sticky top-0, z-index 80, id="masjid-amal-mulya") */}
-          <MasjidSection />
+          {/* Section 8: Light Section - Masjid Amal Mulya / Nilai Kemuhammadiyahan (Sticky top-0, z-index 80, id="masjid-amal-mulya") */}
+          <CoreValuesSection />
 
           {/* Section 9: Dark Navy Section - Closing CTA (Sticky top-0, z-index 90, id="closing-cta") */}
           <ClosingCtaSection />
