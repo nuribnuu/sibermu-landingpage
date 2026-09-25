@@ -24,8 +24,8 @@ export function useDynamicSectionHeight() {
         10
       );
 
-      // Measure true rendered content height
-      const contentHeight = container.getBoundingClientRect().height;
+      // Measure true rendered layout height (avoiding transform inflation)
+      const contentHeight = container.offsetHeight || container.scrollHeight || container.getBoundingClientRect().height;
 
       // Calculate total required height including top marquee offset & padding
       const totalRequiredHeight = Math.ceil(

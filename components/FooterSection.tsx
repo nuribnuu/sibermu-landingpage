@@ -251,12 +251,12 @@ export default function FooterSection() {
                 </li>
                 <li>
                   <a
-                    href="https://wa.me/6285174314147"
+                    href="https://wa.me/6285179946901"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:text-[#1A2A5B] hover:underline transition-colors block"
                   >
-                    <span>{t("footer.contactWaLabel")}</span> 0851-7431-4147
+                    <span>{t("footer.contactWaLabel")}</span> 0851-7994-6901
                   </a>
                 </li>
               </ul>
@@ -288,12 +288,48 @@ export default function FooterSection() {
             </h4>
             <div className="flex flex-col space-y-2.5 text-xs sm:text-sm text-[#706F6F] leading-relaxed font-normal">
               <p>{t("footer.credits.icons")}</p>
-              <p>{t("footer.credits.fonts")}</p>
-              <p>{t("footer.credits.heroAnim")}</p>
-              <p>{t("footer.credits.illustrations")}</p>
+              <p>
+                <a
+                  href="https://docs.wpbeaverbuilder.com/bb-theme/defaults-for-styles/typography/customizer-font-family-setting-system-ui/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[#1A2A5B] hover:underline transition-colors block"
+                >
+                  {t("footer.credits.fontsFull")}
+                </a>
+              </p>
+              <p>
+                <a
+                  href="https://flow.google.com/about"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[#1A2A5B] hover:underline transition-colors block"
+                >
+                  {t("footer.credits.heroAnimFull")}
+                </a>
+              </p>
+              <p>
+                <a
+                  href="https://gemini.google.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[#1A2A5B] hover:underline transition-colors block"
+                >
+                  {t("footer.credits.illustrationsFull")}
+                </a>
+              </p>
               <p>{t("footer.credits.achievements")}</p>
               <p>{t("footer.credits.videoThumbnails")}</p>
-              <p>{t("footer.credits.references")}</p>
+              <p>
+                <a
+                  href="https://sibermu.ac.id"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[#1A2A5B] hover:underline transition-colors block"
+                >
+                  {t("footer.credits.referencesFull")}
+                </a>
+              </p>
             </div>
           </MobileReveal>
         </div>

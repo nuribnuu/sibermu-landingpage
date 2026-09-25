@@ -150,7 +150,7 @@ export const faqData: { id: FAQStructure; en: FAQStructure } = {
           question:
             "Bagaimana cara menghubungi SIBERMU jika masih ada pertanyaan?",
           answer:
-            "Hubungi SIBERMU melalui 0274-5015518 atau WhatsApp di 0851-7431-4147.",
+            "Hubungi SIBERMU melalui 0274-5015518 atau WhatsApp di 0851-7994-6901.",
         },
       ],
     },
@@ -356,7 +356,7 @@ export const faqData: { id: FAQStructure; en: FAQStructure } = {
           id: "kontak-admin",
           question: "How can I contact SIBERMU if I have further questions?",
           answer:
-            "Contact SIBERMU via phone at 0274-5015518 or WhatsApp at 0851-7431-4147.",
+            "Contact SIBERMU via phone at 0274-5015518 or WhatsApp at 0851-7994-6901.",
         },
       ],
     },
