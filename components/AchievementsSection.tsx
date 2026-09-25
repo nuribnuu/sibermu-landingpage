@@ -147,7 +147,7 @@ export const section5PrestasiData = {
   },
 };
 
-export default function PrestasiSection() {
+export default function AchievementsSection() {
   const { locale, t } = useLanguage();
   const content = section5PrestasiData[locale] || section5PrestasiData.id;
   const { containerRef, minHeight, stickyTop } = useDynamicSectionHeight();

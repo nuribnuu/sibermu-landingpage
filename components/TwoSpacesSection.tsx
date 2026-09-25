@@ -52,7 +52,7 @@ export const section3DuaDuniaData = {
   },
 };
 
-export default function CampusExcellenceSection() {
+export default function TwoSpacesSection() {
   const { locale } = useLanguage();
   const content = section3DuaDuniaData[locale] || section3DuaDuniaData.id;
   const { containerRef, minHeight, stickyTop } = useDynamicSectionHeight();

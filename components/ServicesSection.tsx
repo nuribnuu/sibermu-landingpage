@@ -386,7 +386,7 @@ function ServiceIcon({ name, className = "w-5 h-5 text-black" }: { name: string;
   }
 }
 
-export default function LayananSection() {
+export default function ServicesSection() {
   const { locale, t } = useLanguage();
   const { containerRef, minHeight, stickyTop } = useDynamicSectionHeight();
   const [activeModalCard, setActiveModalCard] = useState<ServiceCardData | null>(null);

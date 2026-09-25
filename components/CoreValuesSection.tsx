@@ -123,7 +123,7 @@ export const section8ValuesData = {
   },
 };
 
-export default function MasjidSection() {
+export default function CoreValuesSection() {
   const { locale, t } = useLanguage();
   const content = section8ValuesData[locale] || section8ValuesData.id;
   const { containerRef, minHeight, stickyTop } = useDynamicSectionHeight();

@@ -137,7 +137,7 @@ export const aikCardsList: AikCardItem[] = [
   },
 ];
 
-export default function AikSection() {
+export default function AikActivitiesSection() {
   const { locale, t } = useLanguage();
   const content = section7AikData[locale] || section7AikData.id;
   const { containerRef, minHeight, stickyTop } = useDynamicSectionHeight();

@@ -135,7 +135,7 @@ export const section4Data = {
   },
 };
 
-export default function LifeAtSibermuSection() {
+export default function StudentOrganizationsSection() {
   const { locale, t } = useLanguage();
   const content = section4Data[locale] || section4Data.id;
   const { containerRef, minHeight, stickyTop } = useDynamicSectionHeight();
