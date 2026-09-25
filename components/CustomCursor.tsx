@@ -8,6 +8,7 @@ export default function CustomCursor() {
   const [isClicked, setIsClicked] = useState(false);
   const [hoverText, setHoverText] = useState<string | null>(null);
   const [isEnabled, setIsEnabled] = useState(false);
+  const [isLoadingActive, setIsLoadingActive] = useState(false);
 
   const targetPos = useRef({ x: -100, y: -100 });
   const currentPos = useRef({ x: -100, y: -100 });
@@ -42,6 +43,25 @@ export default function CustomCursor() {
     };
   }, []);
 
+  // Monitor loading screen status via class on <html>
+  useEffect(() => {
+    const checkLoading = () => {
+      setIsLoadingActive(
+        document.documentElement.classList.contains("loading-active"),
+      );
+    };
+
+    checkLoading();
+
+    const observer = new MutationObserver(checkLoading);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   useEffect(() => {
     if (!isEnabled) return;
 
@@ -61,7 +81,7 @@ export default function CustomCursor() {
       if (!target) return;
 
       const interactiveEl = target.closest(
-        'a, button, input, select, textarea, [role="button"], .cursor-pointer, [onclick], [data-cursor-hover]'
+        'a, button, input, select, textarea, [role="button"], .cursor-pointer, [onclick], [data-cursor-hover]',
       );
 
       if (interactiveEl) {
@@ -81,7 +101,7 @@ export default function CustomCursor() {
     document.addEventListener("mouseleave", handleMouseLeave);
     document.addEventListener("mouseenter", handleMouseEnter);
 
-    // Direct 1:1 instant tracking for normal mouse movement (no lerp delay)
+    // Direct 1:1 instant tracking for mouse movement
     const animate = () => {
       currentPos.current.x = targetPos.current.x;
       currentPos.current.y = targetPos.current.y;
@@ -110,6 +130,29 @@ export default function CustomCursor() {
   }, [isEnabled, isVisible]);
 
   if (!isEnabled) return null;
+
+  if (isLoadingActive) {
+    return (
+      <div
+        ref={cursorRef}
+        aria-hidden="true"
+        className={`fixed top-0 left-0 pointer-events-none z-[100001] transition-opacity duration-200 ${
+          isVisible ? "opacity-100" : "opacity-0"
+        }`}
+        style={{ willChange: "transform" }}
+      >
+        {/* Animated Loading Spinner Cursor for Desktop */}
+        <div className="relative flex items-center justify-center -translate-x-1/2 -translate-y-1/2">
+          {/* Glowing outer spinning ring */}
+          <div className="w-8 h-8 rounded-full border-2 border-transparent border-t-[#FF9E44] border-r-[#FF9E44] animate-spin shadow-[0_0_15px_rgba(255,158,68,0.75)]" />
+          {/* Inner counter-spinning dashed ring */}
+          <div className="absolute w-5 h-5 rounded-full border border-dashed border-white/80 animate-spin-reverse" />
+          {/* Center pulsing core dot */}
+          <div className="absolute w-1.5 h-1.5 bg-[#FF9E44] rounded-full animate-ping" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

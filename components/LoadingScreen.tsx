@@ -21,8 +21,10 @@ export default function LoadingScreen({
   // 1. Always lock body scroll on mount — NO sessionStorage check, loading
   //    screen now shows on every refresh unconditionally.
   useEffect(() => {
+    document.documentElement.classList.add("loading-active");
     document.body.style.overflow = "hidden";
     return () => {
+      document.documentElement.classList.remove("loading-active");
       document.body.style.overflow = "";
     };
   }, []);

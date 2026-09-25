@@ -84,6 +84,11 @@ body {
   }
 }
 
+html.loading-active:not(.custom-cursor-active),
+html.loading-active:not(.custom-cursor-active) * {
+  cursor: wait !important;
+}
+
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
   display: none;
