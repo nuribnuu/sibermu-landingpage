@@ -402,6 +402,7 @@ export default function ServicesSection() {
     handleScroll,
     handleMouseDown,
     handleMouseLeave,
+    handleMouseEnter,
     handleMouseUp,
     handleMouseMove,
     dragDistance,
@@ -631,6 +632,7 @@ export default function ServicesSection() {
             ref={scrollRef}
             onScroll={handleScroll}
             onMouseDown={handleMouseDown}
+            onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             onMouseUp={handleMouseUp}
             onMouseMove={handleMouseMove}

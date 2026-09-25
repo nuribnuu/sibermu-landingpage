@@ -81,16 +81,13 @@ export default function CustomCursor() {
     document.addEventListener("mouseleave", handleMouseLeave);
     document.addEventListener("mouseenter", handleMouseEnter);
 
-    // Animation loop using Lerp interpolation (Factor ~0.22 for ~80-120ms response)
-    const lerpFactor = 0.22;
+    // Direct 1:1 instant tracking for normal mouse movement (no lerp delay)
     const animate = () => {
-      currentPos.current.x += (targetPos.current.x - currentPos.current.x) * lerpFactor;
-      currentPos.current.y += (targetPos.current.y - currentPos.current.y) * lerpFactor;
+      currentPos.current.x = targetPos.current.x;
+      currentPos.current.y = targetPos.current.y;
 
       if (cursorRef.current) {
-        const x = Math.round(currentPos.current.x * 100) / 100;
-        const y = Math.round(currentPos.current.y * 100) / 100;
-        cursorRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+        cursorRef.current.style.transform = `translate3d(${currentPos.current.x}px, ${currentPos.current.y}px, 0)`;
       }
 
       rafId.current = requestAnimationFrame(animate);

@@ -5,13 +5,19 @@ import { useState, useRef, useEffect, useCallback } from "react";
 interface UseInfiniteLoopSliderOptions {
   itemCount: number; // Number of items in a single set
   locale?: string;
+  autoSlideIntervalMs?: number; // Auto slide interval in ms (default: 3000)
 }
 
-export function useInfiniteLoopSlider({ itemCount, locale }: UseInfiniteLoopSliderOptions) {
+export function useInfiniteLoopSlider({
+  itemCount,
+  locale,
+  autoSlideIntervalMs = 3000,
+}: UseInfiniteLoopSliderOptions) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const isResettingRef = useRef(false);
 
   const [isMouseDown, setIsMouseDown] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeftState, setScrollLeftState] = useState(0);
   const [dragDistance, setDragDistance] = useState(0);
@@ -20,7 +26,7 @@ export function useInfiniteLoopSlider({ itemCount, locale }: UseInfiniteLoopSlid
     if (!scrollRef.current || !scrollRef.current.firstElementChild) return 300;
     const item = scrollRef.current.firstElementChild as HTMLElement;
     const style = window.getComputedStyle(scrollRef.current);
-    const gap = parseFloat(style.columnGap || style.gap || "24") || 0;
+    const gap = parseFloat(style.columnGap || style.gap || "24") || 24;
     return item.clientWidth + gap;
   }, []);
 
@@ -83,6 +89,11 @@ export function useInfiniteLoopSlider({ itemCount, locale }: UseInfiniteLoopSlid
 
   const handleMouseLeave = () => {
     setIsMouseDown(false);
+    setIsHovered(false);
+  };
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
   };
 
   const handleMouseUp = () => {
@@ -100,7 +111,7 @@ export function useInfiniteLoopSlider({ itemCount, locale }: UseInfiniteLoopSlid
     container.scrollLeft = scrollLeftState - walk;
   };
 
-  const scroll = (direction: "left" | "right") => {
+  const scroll = useCallback((direction: "left" | "right") => {
     if (!scrollRef.current) return;
     const container = scrollRef.current;
     const width = getItemWidth();
@@ -108,7 +119,20 @@ export function useInfiniteLoopSlider({ itemCount, locale }: UseInfiniteLoopSlid
     container.scrollBy({
       left: direction === "left" ? -width : width,
     });
-  };
+  }, [getItemWidth]);
+
+  // Auto-slide every N ms (default: 3000ms = 3 seconds) unless user is dragging or hovering
+  useEffect(() => {
+    if (!autoSlideIntervalMs || autoSlideIntervalMs <= 0) return;
+
+    const interval = setInterval(() => {
+      if (scrollRef.current && !isMouseDown && !isHovered) {
+        scroll("right");
+      }
+    }, autoSlideIntervalMs);
+
+    return () => clearInterval(interval);
+  }, [autoSlideIntervalMs, isMouseDown, isHovered, scroll]);
 
   return {
     scrollRef,
@@ -116,8 +140,10 @@ export function useInfiniteLoopSlider({ itemCount, locale }: UseInfiniteLoopSlid
     handleScroll,
     handleMouseDown,
     handleMouseLeave,
+    handleMouseEnter,
     handleMouseUp,
     handleMouseMove,
     dragDistance,
+    isHovered,
   };
 }

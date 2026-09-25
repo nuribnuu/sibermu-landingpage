@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React from "react";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
+import { useInfiniteLoopSlider } from "@/hooks/useInfiniteLoopSlider";
 import { useDynamicSectionHeight } from "@/hooks/useDynamicSectionHeight";
 import MobileReveal from "@/components/MobileReveal";
 
@@ -151,13 +152,18 @@ export default function AchievementsSection() {
   const { locale, t } = useLanguage();
   const content = section5PrestasiData[locale] || section5PrestasiData.id;
   const { containerRef, minHeight, stickyTop } = useDynamicSectionHeight();
-  const scrollRef = useRef<HTMLDivElement>(null);
 
-  const [isMouseDown, setIsMouseDown] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeftState, setScrollLeftState] = useState(0);
-  const [dragDistance, setDragDistance] = useState(0);
-  const isResettingRef = useRef(false);
+  const {
+    scrollRef,
+    scroll,
+    handleScroll,
+    handleMouseDown,
+    handleMouseLeave,
+    handleMouseEnter,
+    handleMouseUp,
+    handleMouseMove,
+    dragDistance,
+  } = useInfiniteLoopSlider({ itemCount: content.items.length, locale });
 
   // 3 cloned sets of items for seamless infinite looping
   const loopedItems = [
@@ -165,100 +171,6 @@ export default function AchievementsSection() {
     ...content.items.map((item) => ({ ...item, uniqueKey: `set2-${item.id}` })),
     ...content.items.map((item) => ({ ...item, uniqueKey: `set3-${item.id}` })),
   ];
-
-  const getCardWidth = () => {
-    if (!scrollRef.current || !scrollRef.current.firstElementChild) return 300;
-    const card = scrollRef.current.firstElementChild as HTMLElement;
-    const style = window.getComputedStyle(scrollRef.current);
-    const gap = parseFloat(style.columnGap || style.gap || "24") || 24;
-    return card.clientWidth + gap;
-  };
-
-  // Center scroll position at the start of set 2 on mount or locale change
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (scrollRef.current) {
-        const container = scrollRef.current;
-        container.style.scrollBehavior = "auto";
-        const cardWidth = getCardWidth();
-        container.scrollLeft = cardWidth * content.items.length;
-      }
-    }, 50);
-    return () => clearTimeout(timer);
-  }, [locale, content.items.length]);
-
-  // Handle continuous infinite loop on scroll with instantaneous (0ms) boundary reset
-  const handleScroll = () => {
-    if (!scrollRef.current || isResettingRef.current) return;
-    const container = scrollRef.current;
-    const cardWidth = getCardWidth();
-    const singleSetWidth = cardWidth * content.items.length;
-    const currentScroll = container.scrollLeft;
-
-    // Reset when scrolling past the end of Set 2 into Set 3
-    if (currentScroll >= singleSetWidth * 2 - 5) {
-      isResettingRef.current = true;
-      container.style.scrollBehavior = "auto";
-      const offset = currentScroll - singleSetWidth * 2;
-      container.scrollLeft = singleSetWidth + offset;
-      if (isMouseDown) {
-        setScrollLeftState((prev) => prev - singleSetWidth);
-      }
-      requestAnimationFrame(() => {
-        isResettingRef.current = false;
-      });
-    }
-    // Reset when scrolling before the start of Set 2 into Set 1
-    else if (currentScroll <= 5) {
-      isResettingRef.current = true;
-      container.style.scrollBehavior = "auto";
-      const offset = currentScroll;
-      container.scrollLeft = singleSetWidth + offset;
-      if (isMouseDown) {
-        setScrollLeftState((prev) => prev + singleSetWidth);
-      }
-      requestAnimationFrame(() => {
-        isResettingRef.current = false;
-      });
-    }
-  };
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (!scrollRef.current) return;
-    setIsMouseDown(true);
-    setStartX(e.pageX - scrollRef.current.offsetLeft);
-    setScrollLeftState(scrollRef.current.scrollLeft);
-    setDragDistance(0);
-  };
-
-  const handleMouseLeave = () => {
-    setIsMouseDown(false);
-  };
-
-  const handleMouseUp = () => {
-    setIsMouseDown(false);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isMouseDown || !scrollRef.current) return;
-    e.preventDefault();
-    const container = scrollRef.current;
-    container.style.scrollBehavior = "auto";
-    const x = e.pageX - container.offsetLeft;
-    const walk = (x - startX) * 1.5;
-    setDragDistance(Math.abs(x - startX));
-    container.scrollLeft = scrollLeftState - walk;
-  };
-
-  const scroll = (direction: "left" | "right") => {
-    if (!scrollRef.current) return;
-    const container = scrollRef.current;
-    const cardWidth = getCardWidth();
-    container.style.scrollBehavior = "smooth";
-    container.scrollBy({
-      left: direction === "left" ? -cardWidth : cardWidth,
-    });
-  };
 
   return (
     <section
@@ -322,6 +234,7 @@ export default function AchievementsSection() {
             ref={scrollRef}
             onScroll={handleScroll}
             onMouseDown={handleMouseDown}
+            onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             onMouseUp={handleMouseUp}
             onMouseMove={handleMouseMove}
