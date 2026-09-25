@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { useLanguage } from "@/context/LanguageContext";
 import { useInfiniteLoopSlider } from "@/hooks/useInfiniteLoopSlider";
 import { useDynamicSectionHeight } from "@/hooks/useDynamicSectionHeight";
+import MobileReveal from "@/components/MobileReveal";
 
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect;
@@ -127,8 +128,8 @@ export const servicesData: ServiceCardData[] = [
     type: "direct",
     icon: "signature",
     title: {
-      id: "TTE SiberMu",
-      en: "SiberMu TTE",
+      id: "TTE",
+      en: "TTE",
     },
     description: {
       id: "Tanda tangan elektronik.",
@@ -141,8 +142,8 @@ export const servicesData: ServiceCardData[] = [
     type: "direct",
     icon: "graduation-cap",
     title: {
-      id: "Tugas Akhir SiberMu",
-      en: "SiberMu Thesis",
+      id: "Tugas Akhir",
+      en: "Thesis",
     },
     description: {
       id: "Manajemen tugas akhir.",
@@ -169,8 +170,8 @@ export const servicesData: ServiceCardData[] = [
     type: "direct",
     icon: "key",
     title: {
-      id: "SSO SiberMu",
-      en: "SiberMu SSO",
+      id: "SSO",
+      en: "SSO",
     },
     description: {
       id: "Akses semua layanan dengan satu akun.",
@@ -199,8 +200,8 @@ export const servicesData: ServiceCardData[] = [
     type: "coming_soon",
     icon: "link",
     title: {
-      id: "Short Link SiberMu",
-      en: "SiberMu Short Link",
+      id: "Short Link",
+      en: "Short Link",
     },
     description: {
       id: "Akan hadir.",
@@ -410,8 +411,8 @@ export default function LayananSection() {
   const subheadline =
     t("section6.subheadline") ||
     (locale === "en"
-      ? "Full support for the academic journey and personal development of SiberMu students."
-      : "Dukungan penuh untuk perjalanan akademik dan pengembangan diri mahasiswa SiberMu.");
+      ? "Full support for the academic journey and personal development of SIBERMU students."
+      : "Dukungan penuh untuk perjalanan akademik dan pengembangan diri mahasiswa SIBERMU.");
   const seeMoreText = t("section6.seeMore") || (locale === "en" ? "See More →" : " Selengkapnya →");
 
   // Synchronous Layout Effect for Position-Fixed Scroll Lock, Pointer-Events Isolation & Instant Scroll Restoration
@@ -587,18 +588,23 @@ export default function LayananSection() {
         
         {/* HEADER BLOCK */}
         <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
-          <h2 className="font-bold text-4xl sm:text-5xl lg:text-[clamp(2.25rem,3.5vw,3.125rem)] text-[#1A2A5B] leading-[1.2] tracking-tight mb-3">
-            <span className="headline-marker headline-marker-1">
-              {headline}
-            </span>
-          </h2>
-          <p className="text-[#706F6F] text-base sm:text-lg leading-[1.65] font-normal">
-            {subheadline}
-          </p>
+          <MobileReveal delay={0} rotate={-1.5}>
+            <h2 className="font-bold text-4xl sm:text-5xl lg:text-[clamp(2.25rem,3.5vw,3.125rem)] text-[#1A2A5B] leading-[1.2] tracking-tight mb-3">
+              <span className="headline-marker headline-marker-1">
+                {headline}
+              </span>
+            </h2>
+          </MobileReveal>
+
+          <MobileReveal delay={100}>
+            <p className="text-[#706F6F] text-base sm:text-lg leading-[1.65] font-normal">
+              {subheadline}
+            </p>
+          </MobileReveal>
         </div>
 
         {/* PAGINATED 2x2 SLIDER CONTAINER WITH OVERLAPPING CIRCULAR NAVIGATION ARROWS */}
-        <div className="relative max-w-5xl mx-auto px-2 sm:px-4">
+        <MobileReveal delay={150} rotate={1.5} className="relative max-w-5xl mx-auto px-2 sm:px-4">
           
           {/* LEFT CIRCULAR ARROW BUTTON */}
           <button
@@ -697,7 +703,7 @@ export default function LayananSection() {
             ))}
           </div>
 
-        </div>
+        </MobileReveal>
 
       </div>
 

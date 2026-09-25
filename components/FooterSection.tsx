@@ -3,55 +3,11 @@
 import React from "react";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
+import MobileReveal from "@/components/MobileReveal";
+import { smoothScrollToTarget } from "@/utils/smoothScroll";
 
 export default function FooterSection() {
   const { locale, t } = useLanguage();
-
-  const getTargetScrollTop = (targetId: string): number => {
-    if (!targetId || targetId === "hero") return 0;
-
-    const sectionIds = [
-      "hero",
-      "hero-secondary",
-      "dua-dunia",
-      "life-at-sibermu",
-      "prestasi",
-      "layanan-mahasiswa",
-      "aik",
-      "masjid-amal-mulya",
-      "closing-cta",
-    ];
-
-    const targetIndex = sectionIds.indexOf(targetId);
-    if (targetIndex === -1) {
-      const targetEl = document.getElementById(targetId);
-      return targetEl
-        ? targetEl.getBoundingClientRect().top + window.scrollY
-        : 0;
-    }
-
-    let totalTop = 0;
-    for (let i = 0; i < targetIndex; i++) {
-      const sec = document.getElementById(sectionIds[i]);
-      if (sec) {
-        totalTop += sec.offsetHeight;
-      }
-    }
-
-    const isDesktop =
-      typeof window !== "undefined" && window.innerWidth >= 1024;
-    if (!isDesktop) {
-      const headerMarqueeTotal = parseInt(
-        getComputedStyle(document.documentElement).getPropertyValue(
-          "--header-marquee-total",
-        ) || "110",
-        10,
-      );
-      totalTop = Math.max(0, totalTop - (headerMarqueeTotal || 80));
-    }
-
-    return totalTop;
-  };
 
   const handleAnchorClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
@@ -59,8 +15,7 @@ export default function FooterSection() {
   ) => {
     e.preventDefault();
     const targetId = href.replace(/^\/?#/, "");
-    const targetY = getTargetScrollTop(targetId);
-    window.scrollTo({ top: targetY, behavior: "smooth" });
+    smoothScrollToTarget(targetId);
   };
 
   const socialLinks = [
@@ -198,7 +153,7 @@ export default function FooterSection() {
         {/* 4-COLUMN BALANCED GRID LAYOUT */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-12 sm:pb-14">
           {/* COLUMN 1: Brand & About (Span 4 on Desktop) */}
-          <div className="lg:col-span-4 flex flex-col space-y-4 md:border-r md:border-black/10 md:pr-8 lg:pr-8">
+          <MobileReveal delay={0} rotate={-1.5} className="lg:col-span-4 flex flex-col space-y-4 md:border-r md:border-black/10 md:pr-8 lg:pr-8">
             <a
               href="#hero"
               onClick={(e) => handleAnchorClick(e, "#hero")}
@@ -206,7 +161,7 @@ export default function FooterSection() {
             >
               <Image
                 src="/logo.png"
-                alt="SiberMu Logo"
+                alt="SIBERMU Logo"
                 width={140}
                 height={36}
                 className="h-7 sm:h-8 w-auto object-contain [filter:brightness(0)_opacity(0.85)] hover:scale-105 transition-transform"
@@ -246,10 +201,10 @@ export default function FooterSection() {
                 </a>
               ))}
             </div>
-          </div>
+          </MobileReveal>
 
           {/* COLUMN 2: Official Links / Tautan Resmi (Span 2 on Desktop) */}
-          <div className="lg:col-span-2 flex flex-col space-y-3.5">
+          <MobileReveal delay={100} rotate={1.5} className="lg:col-span-2 flex flex-col space-y-3.5">
             <h4 className="font-bold text-base text-[#1A2A5B] uppercase tracking-wider pb-1.5 border-b-2 border-black/10">
               {t("footer.officialLinksTitle")}
             </h4>
@@ -267,10 +222,10 @@ export default function FooterSection() {
                 </li>
               ))}
             </ul>
-          </div>
+          </MobileReveal>
 
           {/* COLUMN 3: Halaman Depan / Main Campus & Contact (Span 3 on Desktop) */}
-          <div className="lg:col-span-3 flex flex-col space-y-6">
+          <MobileReveal delay={200} rotate={-1} className="lg:col-span-3 flex flex-col space-y-6">
             {/* Contact Section */}
             <div className="flex flex-col space-y-3.5">
               <h4 className="font-bold text-base text-[#1A2A5B] uppercase tracking-wider pb-1.5 border-b-2 border-black/10">
@@ -324,27 +279,30 @@ export default function FooterSection() {
                 </li>
               </ul>
             </div>
-          </div>
+          </MobileReveal>
 
           {/* COLUMN 4: Page Credits (Span 3 on Desktop) */}
-          <div className="lg:col-span-3 flex flex-col space-y-3.5">
+          <MobileReveal delay={300} rotate={1} className="lg:col-span-3 flex flex-col space-y-3.5">
             <h4 className="font-bold text-base text-[#1A2A5B] uppercase tracking-wider pb-1.5 border-b-2 border-black/10">
               {t("footer.creditsTitle")}
             </h4>
             <div className="flex flex-col space-y-2.5 text-xs sm:text-sm text-[#706F6F] leading-relaxed font-normal">
               <p>{t("footer.credits.icons")}</p>
               <p>{t("footer.credits.fonts")}</p>
-              <p>{t("footer.credits.photos")}</p>
               <p>{t("footer.credits.heroAnim")}</p>
+              <p>{t("footer.credits.illustrations")}</p>
+              <p>{t("footer.credits.achievements")}</p>
+              <p>{t("footer.credits.videoThumbnails")}</p>
+              <p>{t("footer.credits.references")}</p>
             </div>
-          </div>
+          </MobileReveal>
         </div>
 
         {/* BOTTOM BAR DIVIDER, LEGALITY BADGE & COPYRIGHT */}
-        <div className="border-t border-slate-200 sm:border-black/10 pt-8 sm:pt-10 flex flex-col items-center justify-center text-center text-xs sm:text-sm text-[#706F6F] font-normal space-y-2">
+        <MobileReveal delay={350} rotate={0} className="border-t border-slate-200 sm:border-black/10 pt-8 sm:pt-10 flex flex-col items-center justify-center text-center text-xs sm:text-sm text-[#706F6F] font-normal space-y-2">
           <p>{t("footer.copyrightLine1")}</p>
           <p>{t("footer.copyrightLine2")}</p>
-        </div>
+        </MobileReveal>
       </div>
     </footer>
   );

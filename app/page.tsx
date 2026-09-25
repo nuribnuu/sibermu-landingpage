@@ -15,6 +15,7 @@ import AikSection from "@/components/AikSection";
 import MasjidSection from "@/components/MasjidSection";
 import ClosingCtaSection from "@/components/ClosingCtaSection";
 import FooterSection from "@/components/FooterSection";
+import FloatingContactButton from "@/components/FloatingContactButton";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -43,7 +44,12 @@ export default function Home() {
       )}
 
       {/* Header and Mobile Bottom Navigation Bar - ONLY rendered when loading is false */}
-      {!isLoading && <Header />}
+      {!isLoading && (
+        <>
+          <Header />
+          <FloatingContactButton />
+        </>
+      )}
 
       {/* Sticky Stacking Cascade Container */}
       <div className="relative w-full">
@@ -71,7 +77,7 @@ export default function Home() {
           {/* Section 3: Dark Navy Section - Dua Ruang. Satu Perjalanan. (Sticky top-0, z-index 30, id="dua-dunia") */}
           <CampusExcellenceSection />
 
-          {/* Section 4: Light Section - Life at SiberMu (Sticky top-0, z-index 40, id="life-at-sibermu") */}
+          {/* Section 4: Light Section - Life at SIBERMU (Sticky top-0, z-index 40, id="life-at-sibermu") */}
           <LifeAtSibermuSection />
 
           {/* Section 5: Dark Navy Section - Prestasi (Sticky top-0, z-index 50, id="prestasi") */}

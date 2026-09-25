@@ -76,6 +76,14 @@ body {
   position: relative;
 }
 
+/* Neobrutalism Custom Cursor rules for Desktop */
+@media (min-width: 1024px) and (pointer: fine) {
+  html.custom-cursor-active,
+  html.custom-cursor-active * {
+    cursor: none !important;
+  }
+}
+
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
   display: none;
@@ -311,3 +319,21 @@ body::-webkit-scrollbar {
 .animate-fade-slide {
   animation: fadeSlide 0.35s ease-out;
 }
+
+/* SCROLL REVEAL STYLES (MOBILE & DESKTOP) */
+.mobile-reveal-element,
+.scroll-reveal-element {
+  opacity: 0;
+  transform: translateY(35px) rotate(var(--mobile-reveal-rotate, 0deg));
+  transition: opacity var(--mobile-reveal-duration, 450ms) cubic-bezier(0.34, 1.56, 0.64, 1),
+              transform var(--mobile-reveal-duration, 450ms) cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition-delay: var(--mobile-reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.mobile-reveal-element.is-revealed,
+.scroll-reveal-element.is-revealed {
+  opacity: 1;
+  transform: translateY(0) rotate(0deg);
+}
+

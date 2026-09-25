@@ -4,6 +4,7 @@ import React, { useState, useEffect, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
 import { useLanguage } from "@/context/LanguageContext";
 import { useDynamicSectionHeight } from "@/hooks/useDynamicSectionHeight";
+import MobileReveal from "@/components/MobileReveal";
 
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect;
@@ -57,13 +58,13 @@ export const section4Data = {
   id: {
     headline: "Organisasi & Unit Kegiatan Mahasiswa (UKM)",
     subheadline:
-      "Di SiberMu, mahasiswa memiliki ruang untuk mengembangkan kepemimpinan dan kolaborasi melalui organisasi mahasiswa, serta menyalurkan minat dan bakat lewat berbagai Unit Kegiatan Mahasiswa (UKM).",
+      "Di SIBERMU, mahasiswa memiliki ruang untuk mengembangkan kepemimpinan dan kolaborasi melalui organisasi mahasiswa, serta menyalurkan minat dan bakat lewat berbagai Unit Kegiatan Mahasiswa (UKM).",
     cards: [
       {
         icon: "users",
-        title: "BEM SiberMu",
+        title: "BEM SIBERMU",
         description:
-          "Organisasi mahasiswa tertinggi di SiberMu, wadah aspirasi dan kepemimpinan mahasiswa. Segera hadir.",
+          "Organisasi mahasiswa tertinggi di SIBERMU, wadah aspirasi dan kepemimpinan mahasiswa. Segera hadir.",
         isComingSoon: true,
         comingSoonMessage: "Organisasi ini akan segera hadir.",
       },
@@ -96,13 +97,13 @@ export const section4Data = {
   en: {
     headline: "Student Organizations & Student Activity Units (UKM)",
     subheadline:
-      "At SiberMu, students have a space to develop leadership and collaboration through student organizations, and to channel their interests and talents through various Student Activity Units (UKM).",
+      "At SIBERMU, students have a space to develop leadership and collaboration through student organizations, and to channel their interests and talents through various Student Activity Units (UKM).",
     cards: [
       {
         icon: "users",
-        title: "BEM SiberMu (Student Executive Board)",
+        title: "BEM SIBERMU (Student Executive Board)",
         description:
-          "The highest student organization at SiberMu, a platform for student aspiration and leadership. Coming soon.",
+          "The highest student organization at SIBERMU, a platform for student aspiration and leadership. Coming soon.",
         isComingSoon: true,
         comingSoonMessage: "This organization is coming soon.",
       },
@@ -280,14 +281,19 @@ export default function LifeAtSibermuSection() {
         
         {/* HEADER BLOCK */}
         <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
-          <h2 className="font-bold text-3xl sm:text-4xl lg:text-[clamp(2.25rem,3.5vw,3.125rem)] text-[#1A2A5B] leading-[1.2] tracking-tight mb-3">
-            <span className="headline-marker headline-marker-1">
-              {t("section4.headline") || content.headline}
-            </span>
-          </h2>
-          <p className="text-[#706F6F] text-sm sm:text-base lg:text-lg leading-[1.65] font-normal">
-            {t("section4.subheadline") || content.subheadline}
-          </p>
+          <MobileReveal delay={0} rotate={-1.5}>
+            <h2 className="font-bold text-3xl sm:text-4xl lg:text-[clamp(2.25rem,3.5vw,3.125rem)] text-[#1A2A5B] leading-[1.2] tracking-tight mb-3">
+              <span className="headline-marker headline-marker-1">
+                {t("section4.headline") || content.headline}
+              </span>
+            </h2>
+          </MobileReveal>
+
+          <MobileReveal delay={100}>
+            <p className="text-[#706F6F] text-sm sm:text-base lg:text-lg leading-[1.65] font-normal">
+              {t("section4.subheadline") || content.subheadline}
+            </p>
+          </MobileReveal>
         </div>
 
         {/* 5 FEATURE CARDS GRID (3 Columns Desktop, 2 Columns Tablet with BEM Spanning Full Width at Top, 1 Column Mobile) */}
@@ -295,47 +301,54 @@ export default function LifeAtSibermuSection() {
           {content.cards.map((card, idx) => {
             // Card 01 (BEM) spans 2 columns on medium screens (tablet) for a balanced 1+2+2 grid layout
             const gridSpanClass = idx === 0 ? "md:col-span-2 lg:col-span-1" : "";
+            const cardRotate = idx % 2 === 0 ? -2 : 2;
 
             return (
-              <div
+              <MobileReveal
                 key={idx}
-                onClick={() => handleCardClick(card)}
-                className={`bg-white p-5 sm:p-6 rounded-none border-[3.5px] sm:border-4 border-black shadow-[6px_6px_0px_#000000] flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-[9px_9px_0px_#000000] relative group ${
-                  card.isComingSoon ? "cursor-pointer" : ""
-                } ${gridSpanClass}`}
+                delay={idx * 100}
+                rotate={cardRotate}
+                className={gridSpanClass}
               >
-                <div>
-                  <div className="flex items-start justify-between mb-3.5">
-                    {/* ICON BADGE */}
-                    {card.icon && (
-                      <div className="w-9 h-9 sm:w-10 sm:h-10 neobrutalist-badge flex items-center justify-center bg-[#FF9E44] text-black shrink-0 border-2 border-black">
-                        <CardIcon name={card.icon} className="w-5 h-5 text-black" />
-                      </div>
-                    )}
-
-                    <div className="flex items-center space-x-2 ml-auto">
-                      {card.isComingSoon && (
-                        <span className="text-[10px] sm:text-[11px] font-bold tracking-wide uppercase px-2 py-0.5 bg-amber-100 border border-amber-300 text-amber-800 rounded-none">
-                          Soon
-                        </span>
+                <div
+                  onClick={() => handleCardClick(card)}
+                  className={`bg-white p-5 sm:p-6 rounded-none border-[3.5px] sm:border-4 border-black shadow-[6px_6px_0px_#000000] flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-[9px_9px_0px_#000000] relative group h-full ${
+                    card.isComingSoon ? "cursor-pointer" : ""
+                  }`}
+                >
+                  <div>
+                    <div className="flex items-start justify-between mb-3.5">
+                      {/* ICON BADGE */}
+                      {card.icon && (
+                        <div className="w-9 h-9 sm:w-10 sm:h-10 neobrutalist-badge flex items-center justify-center bg-[#FF9E44] text-black shrink-0 border-2 border-black">
+                          <CardIcon name={card.icon} className="w-5 h-5 text-black" />
+                        </div>
                       )}
-                      {/* SUBTLE CORNER ACCENT ICON */}
-                      <div className="w-8 h-8 rounded-none border border-black/10 flex items-center justify-center text-[#1A2A5B]/40 group-hover:text-[#1A2A5B] group-hover:border-black transition-colors">
-                        ↗
+
+                      <div className="flex items-center space-x-2 ml-auto">
+                        {card.isComingSoon && (
+                          <span className="text-[10px] sm:text-[11px] font-bold tracking-wide uppercase px-2 py-0.5 bg-amber-100 border border-amber-300 text-amber-800 rounded-none">
+                            Soon
+                          </span>
+                        )}
+                        {/* SUBTLE CORNER ACCENT ICON */}
+                        <div className="w-8 h-8 rounded-none border border-black/10 flex items-center justify-center text-[#1A2A5B]/40 group-hover:text-[#1A2A5B] group-hover:border-black transition-colors">
+                          ↗
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div>
-                    <h3 className="font-bold text-lg sm:text-xl text-[#1A2A5B] tracking-tight mb-2 uppercase">
-                      {card.title}
-                    </h3>
-                    <p className="text-[#706F6F] text-xs sm:text-sm leading-[1.6] font-normal">
-                      {card.description}
-                    </p>
+                    <div>
+                      <h3 className="font-bold text-lg sm:text-xl text-[#1A2A5B] tracking-tight mb-2 uppercase">
+                        {card.title}
+                      </h3>
+                      <p className="text-[#706F6F] text-xs sm:text-sm leading-[1.6] font-normal">
+                        {card.description}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </MobileReveal>
             );
           })}
         </div>

@@ -33,7 +33,7 @@ export default function LanguageDropdown({ theme = "dark" }: LanguageDropdownPro
       : "text-white hover:text-white hover:underline hover:underline-offset-4 hover:decoration-2";
 
   return (
-    <div className="relative inline-block text-left" ref={dropdownRef}>
+    <div className="relative inline-block text-left z-[140]" ref={dropdownRef}>
       {/* Language Trigger - Globe icon + text "ID" / "EN" + chevron */}
       <button
         type="button"
@@ -70,7 +70,7 @@ export default function LanguageDropdown({ theme = "dark" }: LanguageDropdownPro
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-3 w-40 rounded-none bg-[#120e36]/95 border border-white/10 shadow-xl z-[110] p-1 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+        <div className="absolute right-0 mt-3 w-40 rounded-none bg-[#120e36]/95 border border-white/10 shadow-xl z-[150] p-1 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
           {languages.map((lang) => {
             const isActive = locale === lang.code;
             return (

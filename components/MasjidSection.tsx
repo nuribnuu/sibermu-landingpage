@@ -3,6 +3,7 @@
 import React from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useDynamicSectionHeight } from "@/hooks/useDynamicSectionHeight";
+import MobileReveal from "@/components/MobileReveal";
 
 export interface CoreValueCard {
   number: string;
@@ -14,7 +15,7 @@ export const section8ValuesData = {
   id: {
     headline: "Nilai Kemuhammadiyahan",
     subheadline:
-      "Delapan nilai utama yang hidup dan menjadi jiwa seluruh pegiat Muhammadiyah, menjadi fondasi gerakan SiberMu dalam mendidik dan melayani umat.",
+      "Delapan nilai utama yang hidup dan menjadi jiwa seluruh pegiat Muhammadiyah, menjadi fondasi gerakan SIBERMU dalam mendidik dan melayani umat.",
     cards: [
       {
         number: "01",
@@ -68,7 +69,7 @@ export const section8ValuesData = {
   en: {
     headline: "Core Values of Muhammadiyah",
     subheadline:
-      "Eight core values that live within and give spirit to every Muhammadiyah activist — the foundation guiding SiberMu in educating and serving the community.",
+      "Eight core values that live within and give spirit to every Muhammadiyah activist — the foundation guiding SIBERMU in educating and serving the community.",
     cards: [
       {
         number: "01",
@@ -145,47 +146,58 @@ export default function MasjidSection() {
         
         {/* HEADER BLOCK */}
         <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
-          <h2 className="font-bold text-3xl sm:text-4xl lg:text-[clamp(2rem,3.2vw,2.875rem)] text-[#1A2A5B] leading-[1.2] tracking-tight mb-3">
-            <span className="headline-marker headline-marker-2">
-              {t("section8.headline") || content.headline}
-            </span>
-          </h2>
-          <p className="text-[#706F6F] text-sm sm:text-base lg:text-lg leading-[1.65] font-normal">
-            {t("section8.subheadline") || content.subheadline}
-          </p>
+          <MobileReveal delay={0} rotate={-1.5}>
+            <h2 className="font-bold text-3xl sm:text-4xl lg:text-[clamp(2rem,3.2vw,2.875rem)] text-[#1A2A5B] leading-[1.2] tracking-tight mb-3">
+              <span className="headline-marker headline-marker-2">
+                {t("section8.headline") || content.headline}
+              </span>
+            </h2>
+          </MobileReveal>
+
+          <MobileReveal delay={100}>
+            <p className="text-[#706F6F] text-sm sm:text-base lg:text-lg leading-[1.65] font-normal">
+              {t("section8.subheadline") || content.subheadline}
+            </p>
+          </MobileReveal>
         </div>
 
         {/* 8 CORE VALUES CARDS GRID (4 Columns Desktop 4x2, 2 Columns Tablet 2x4, 1 Column Mobile) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 max-w-7xl mx-auto">
-          {content.cards.map((card, idx) => (
-            <div
-              key={idx}
-              className="bg-white p-5 sm:p-6 rounded-none border-[3.5px] sm:border-4 border-black shadow-[6px_6px_0px_#000000] flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-[9px_9px_0px_#000000] relative group"
-            >
-              <div>
-                <div className="flex items-start justify-between mb-3.5">
-                  {/* NUMBERED BADGE */}
-                  <div className="w-9 h-9 sm:w-10 sm:h-10 neobrutalist-badge flex items-center justify-center text-xs sm:text-sm font-extrabold bg-[#FF9E44] text-black shrink-0 border-2 border-black">
-                    {card.number}
-                  </div>
+          {content.cards.map((card, idx) => {
+            const cardRotate = idx % 2 === 0 ? -2 : 2;
+            return (
+              <MobileReveal
+                key={idx}
+                delay={idx * 80}
+                rotate={cardRotate}
+              >
+                <div className="bg-white p-5 sm:p-6 rounded-none border-[3.5px] sm:border-4 border-black shadow-[6px_6px_0px_#000000] flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-[9px_9px_0px_#000000] relative group h-full">
+                  <div>
+                    <div className="flex items-start justify-between mb-3.5">
+                      {/* NUMBERED BADGE */}
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 neobrutalist-badge flex items-center justify-center text-xs sm:text-sm font-extrabold bg-[#FF9E44] text-black shrink-0 border-2 border-black">
+                        {card.number}
+                      </div>
 
-                  {/* SUBTLE CORNER ACCENT STAR */}
-                  <div className="w-7 h-7 rounded-none border border-black/10 flex items-center justify-center text-[#1A2A5B]/30 group-hover:text-[#1A2A5B] group-hover:border-black/30 transition-colors text-xs font-bold">
-                    ✦
+                      {/* SUBTLE CORNER ACCENT STAR */}
+                      <div className="w-7 h-7 rounded-none border border-black/10 flex items-center justify-center text-[#1A2A5B]/30 group-hover:text-[#1A2A5B] group-hover:border-black/30 transition-colors text-xs font-bold">
+                        ✦
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="font-bold text-base sm:text-lg text-[#1A2A5B] tracking-tight mb-2 uppercase leading-snug">
+                        {card.title}
+                      </h3>
+                      <p className="text-[#706F6F] text-xs sm:text-sm leading-[1.6] font-normal">
+                        {card.description}
+                      </p>
+                    </div>
                   </div>
                 </div>
-
-                <div>
-                  <h3 className="font-bold text-base sm:text-lg text-[#1A2A5B] tracking-tight mb-2 uppercase leading-snug">
-                    {card.title}
-                  </h3>
-                  <p className="text-[#706F6F] text-xs sm:text-sm leading-[1.6] font-normal">
-                    {card.description}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
+              </MobileReveal>
+            );
+          })}
         </div>
 
       </div>

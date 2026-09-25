@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useLanguage } from "@/context/LanguageContext";
+import { smoothScrollToTarget } from "@/utils/smoothScroll";
 
 interface MegaMenuProps {
   activeMenu: "kemahasiswaan" | "aik" | null;
@@ -13,48 +14,6 @@ export default function MegaMenu({ activeMenu, onClose }: MegaMenuProps) {
 
   if (!activeMenu) return null;
 
-  const getTargetScrollTop = (targetId: string): number => {
-    if (!targetId || targetId === "hero") return 0;
-
-    const sectionIds = [
-      "hero",
-      "hero-secondary",
-      "dua-dunia",
-      "life-at-sibermu",
-      "prestasi",
-      "layanan-mahasiswa",
-      "aik",
-      "masjid-amal-mulya",
-      "closing-cta",
-    ];
-
-    const targetIndex = sectionIds.indexOf(targetId);
-    if (targetIndex === -1) {
-      const targetEl = document.getElementById(targetId);
-      return targetEl ? targetEl.getBoundingClientRect().top + window.scrollY : 0;
-    }
-
-    let totalTop = 0;
-    for (let i = 0; i < targetIndex; i++) {
-      const sec = document.getElementById(sectionIds[i]);
-      if (sec) {
-        totalTop += sec.offsetHeight;
-      }
-    }
-
-    const isDesktop = typeof window !== "undefined" && window.innerWidth >= 1024;
-    if (!isDesktop) {
-      const headerMarqueeTotal = parseInt(
-        getComputedStyle(document.documentElement)
-          .getPropertyValue("--header-marquee-total") || "110",
-        10
-      );
-      totalTop = Math.max(0, totalTop - (headerMarqueeTotal || 80));
-    }
-
-    return totalTop;
-  };
-
   const handleAnchorClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
     href: string,
@@ -64,8 +23,7 @@ export default function MegaMenu({ activeMenu, onClose }: MegaMenuProps) {
     if (href.startsWith("#") || href.startsWith("/#")) {
       e.preventDefault();
       const targetId = href.replace(/^\/?#/, "");
-      const targetY = getTargetScrollTop(targetId);
-      window.scrollTo({ top: targetY, behavior: "smooth" });
+      smoothScrollToTarget(targetId, 750);
       onClose();
     }
   };

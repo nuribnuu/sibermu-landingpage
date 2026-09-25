@@ -131,13 +131,13 @@ export default function LoadingScreen({
               </svg>
             </div>
 
-            <div className="relative z-10 p-3 sm:p-4 lg:p-5 bg-white rounded-2xl shadow-[0_0_40px_rgba(75,63,168,0.5)] border border-white/20 transform transition-transform duration-300 hover:scale-105">
+            <div className="relative z-10 flex items-center justify-center w-[90px] h-[90px] sm:w-[120px] sm:h-[120px] lg:w-[140px] lg:h-[140px] bg-white rounded-full shadow-[0_0_40px_rgba(75,63,168,0.5)] border border-white/20 transform transition-transform duration-300 hover:scale-105">
               <Image
                 src="/logo.png"
-                alt="SiberMu Logo"
+                alt="SIBERMU Logo"
                 width={140}
                 height={36}
-                className="h-6 sm:h-9 lg:h-11 w-auto object-contain [filter:brightness(0)_opacity(0.9)]"
+                className="w-[36%] h-auto object-contain [filter:brightness(0)_opacity(0.9)]"
                 priority
               />
             </div>

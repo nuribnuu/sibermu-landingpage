@@ -13,7 +13,7 @@ export const en = {
       item2: "Achievements",
       item3: "Services",
       promoTitle: "LEARN & CREATE",
-      promoHeading: "Explore SiberMu Student Life Experience",
+      promoHeading: "Explore SIBERMU Student Life Experience",
       promoCta: "Explore",
     },
     aik: {
@@ -25,18 +25,18 @@ export const en = {
     },
   },
   section2: {
-    headlineLine1: "Let's grow, create,",
-    headlineLine2: "and transform with faith",
+    headlineLine1: "Let's Grow, Create,",
+    headlineLine2: "and Transform with Faith",
     subheadline:
-      "Student life at SiberMu is a space to learn, organize, achieve, and make an impact — grounded in the values of Al-Islam and Kemuhammadiyahan.",
+      "Student life at SIBERMU is a space to learn, organize, achieve, and make an impact — grounded in the values of Al-Islam and Kemuhammadiyahan.",
     cta: "Explore →",
-    statBadgeTitle: "500+ Active &",
-    statBadgeSubtitle: "Accomplished Students",
+    statBadgeTitle: "6000+ Students",
+    statBadgeSubtitle: "Choose SIBERMU",
     photoBadgeText: "LEADING CYBER CAMPUS",
     smallPhotoText: "Al-Islam & Kemuhammadiyahan Activities",
   },
   section3: {
-    headlineLine1: "Two Spaces",
+    headlineLine1: "Two Spaces,",
     headlineLine2: "One Journey",
     card1Title: "STUDENT AFFAIRS",
     card1Desc:
@@ -50,7 +50,7 @@ export const en = {
   section4: {
     headline: "Student Organizations & Student Activity Units (UKM)",
     subheadline:
-      "At SiberMu, students have a space to develop leadership and collaboration through student organizations, and to channel their interests and talents through various Student Activity Units (UKM).",
+      "At SIBERMU, students have a space to develop leadership and collaboration through student organizations, and to channel their interests and talents through various Student Activity Units (UKM).",
     card1Title: "UKM English Club",
     card1Desc:
       "A platform for developing English language skills, debate, and global communication for students.",
@@ -67,24 +67,24 @@ export const en = {
   section5: {
     headline: "Achievements",
     subheadline:
-      "A space for SiberMu students to test their ideas, creativity, and abilities beyond the classroom.",
-    cardCta: "Read More",
+      "A space for SIBERMU students to test their ideas, creativity, and abilities beyond the classroom.",
+    cardCta: "See More",
   },
   section6: {
     headline: "Services",
     subheadline:
-      "Full support for the academic journey and personal development of SiberMu students.",
+      "Full support for the academic journey and personal development of SIBERMU students.",
     seeMore: "See More →",
   },
   section7: {
     headline: "Religious Activities, Study Sessions & Da'wah",
     subheadline:
-      "From Islamic holiday observances and Al-Islam and Kemuhammadiyahan study sessions to digital da'wah outreach — Islamic values are the foundation of every activity at SiberMu.",
+      "From Islamic holiday observances and Al-Islam and Kemuhammadiyahan study sessions to digital da'wah outreach — Islamic values are the foundation of every activity at SIBERMU.",
   },
   section8: {
     headline: "Core Values of Muhammadiyah",
     subheadline:
-      "Eight core values that live within and give spirit to every Muhammadiyah activist — the foundation guiding SiberMu in educating and serving the community.",
+      "Eight core values that live within and give spirit to every Muhammadiyah activist — the foundation guiding SIBERMU in educating and serving the community.",
     cards: [
       {
         number: "01",
@@ -138,11 +138,11 @@ export const en = {
   },
   section9: {
     badge: "SIBERMU — #BeyondBoundaries",
-    headline: "Start Your Journey With SiberMu",
+    headline: "Take Your Big Step Forward with SIBERMU",
     cta1: "Register",
   },
   footer: {
-    brandName: "SiberMu — Siber Muhammadiyah University",
+    brandName: "SIBERMU — Siber Muhammadiyah University",
     tagline:
       "Student Affairs and Al-Islam Kemuhammadiyahan Bureau — supporting students to learn, create, and grow without limits.",
     officialLinksTitle: "Official Links",
@@ -170,10 +170,13 @@ export const en = {
     credits: {
       icons: "Icons — Inline SVG (custom)",
       fonts: "Fonts — System Default",
-      photos: "Photos — Unsplash & YouTube (SiberMu official documentation)",
-      heroAnim: "Hero Animation — Google Nano Banana 2 (AI image generation)",
+      heroAnim: "Hero Animation — Google Flow (Nano Banana 2, AI video generation)",
+      illustrations: "Kemahasiswaan & AIK Illustrations — Google Gemini (AI image generation)",
+      achievements: "Achievement Thumbnails — Official articles & press coverage",
+      videoThumbnails: "Video Thumbnails — YouTube",
+      references: "Links & Reference Data — SIBERMU Official Website (sibermu.ac.id)",
     },
-    copyrightLine1: "© 2026 SiberMu — Siber Muhammadiyah University.",
+    copyrightLine1: "© 2026 SIBERMU — Siber Muhammadiyah University.",
     copyrightLine2: "All rights reserved.",
   },
 };

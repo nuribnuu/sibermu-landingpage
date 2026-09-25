@@ -13,7 +13,7 @@ export const id = {
       item2: "Prestasi Mahasiswa",
       item3: "Layanan Mahasiswa",
       promoTitle: "BEREDUKASI & BERKARYA",
-      promoHeading: "Jelajahi Dunia Kemahasiswaan SiberMu",
+      promoHeading: "Jelajahi Dunia Kemahasiswaan SIBERMU",
       promoCta: "Jelajahi",
     },
     aik: {
@@ -28,15 +28,15 @@ export const id = {
     headlineLine1: "Mari bertumbuh, berkarya,",
     headlineLine2: "dan berdampak dengan keimanan",
     subheadline:
-      "Kehidupan mahasiswa SiberMu adalah ruang untuk belajar, berorganisasi, berprestasi, dan memberi manfaat dengan berlandaskan nilai Al-Islam dan Kemuhammadiyahan.",
+      "Kehidupan mahasiswa SIBERMU adalah ruang untuk belajar, berorganisasi, berprestasi, dan memberi manfaat dengan berlandaskan nilai Al-Islam dan Kemuhammadiyahan.",
     cta: "Jelajahi →",
-    statBadgeTitle: "500+ Mahasiswa",
-    statBadgeSubtitle: "Aktif & Berprestasi",
+    statBadgeTitle: "6000+ Mahasiswa",
+    statBadgeSubtitle: "Memilih SIBERMU",
     photoBadgeText: "KAMPUS SIBER TERDEPAN",
     smallPhotoText: "Kegiatan Al-Islam & Kemuhammadiyahan",
   },
   section3: {
-    headlineLine1: "Dua Ruang",
+    headlineLine1: "Dua Ruang,",
     headlineLine2: "Satu Perjalanan",
     card1Title: "KEMAHASISWAAN",
     card1Desc:
@@ -50,7 +50,7 @@ export const id = {
   section4: {
     headline: "Organisasi & Unit Kegiatan Mahasiswa (UKM)",
     subheadline:
-      "Di SiberMu, mahasiswa memiliki ruang untuk mengembangkan kepemimpinan dan kolaborasi melalui organisasi mahasiswa, serta menyalurkan minat dan bakat lewat berbagai Unit Kegiatan Mahasiswa (UKM).",
+      "Di SIBERMU, mahasiswa memiliki ruang untuk mengembangkan kepemimpinan dan kolaborasi melalui organisasi mahasiswa, serta menyalurkan minat dan bakat lewat berbagai Unit Kegiatan Mahasiswa (UKM).",
     card1Title: "UKM English Club",
     card1Desc:
       "Wadah pengembangan kemampuan bahasa Inggris, debat, dan komunikasi global bagi mahasiswa.",
@@ -67,24 +67,24 @@ export const id = {
   section5: {
     headline: "Prestasi",
     subheadline:
-      "Ruang bagi mahasiswa SiberMu untuk menguji ide, kreativitas, dan kemampuan mereka hingga melampaui bangku kuliah.",
+      "Ruang bagi mahasiswa SIBERMU untuk menguji ide, kreativitas, dan kemampuan mereka hingga melampaui bangku kuliah.",
     cardCta: "Selengkapnya",
   },
   section6: {
     headline: "Layanan",
     subheadline:
-      "Dukungan penuh untuk perjalanan akademik dan pengembangan diri mahasiswa SiberMu.",
+      "Dukungan penuh untuk perjalanan akademik dan pengembangan diri mahasiswa SIBERMU.",
     seeMore: "Selengkapnya →",
   },
   section7: {
     headline: "Kegiatan Keagamaan, Kajian & Syiar",
     subheadline:
-      "Dari peringatan hari besar Islam, kajian pembinaan Al-Islam dan Kemuhammadiyahan, hingga syiar dakwah digital — nilai Islam menjadi landasan setiap kegiatan di SiberMu.",
+      "Dari peringatan hari besar Islam, kajian pembinaan Al-Islam dan Kemuhammadiyahan, hingga syiar dakwah digital — nilai Islam menjadi landasan setiap kegiatan di SIBERMU.",
   },
   section8: {
     headline: "Nilai Kemuhammadiyahan",
     subheadline:
-      "Delapan nilai utama yang hidup dan menjadi jiwa seluruh pegiat Muhammadiyah, menjadi fondasi gerakan SiberMu dalam mendidik dan melayani umat.",
+      "Delapan nilai utama yang hidup dan menjadi jiwa seluruh pegiat Muhammadiyah, menjadi fondasi gerakan SIBERMU dalam mendidik dan melayani umat.",
     cards: [
       {
         number: "01",
@@ -137,11 +137,11 @@ export const id = {
   },
   section9: {
     badge: "SIBERMU — #MelampauiBatas",
-    headline: "Mulai Perjalananmu Bersama SiberMu",
+    headline: "Mulai Langkah Besarmu bersama SIBERMU",
     cta1: "Daftar",
   },
   footer: {
-    brandName: "SiberMu — Universitas Siber Muhammadiyah",
+    brandName: "SIBERMU — Universitas Siber Muhammadiyah",
     tagline:
       "Biro Kemahasiswaan dan Al-Islam Kemuhammadiyahan — mendampingi mahasiswa belajar, berkarya, dan bertumbuh tanpa batas.",
     officialLinksTitle: "Tautan Resmi",
@@ -169,10 +169,13 @@ export const id = {
     credits: {
       icons: "Ikon — Inline SVG (custom)",
       fonts: "Font — System Default",
-      photos: "Foto — Unsplash & YouTube (dokumentasi resmi SiberMu)",
-      heroAnim: "Animasi Hero — Google Nano Banana 2 (AI image generation)",
+      heroAnim: "Animasi Hero — Google Flow (Nano Banana 2, AI video generation)",
+      illustrations: "Ilustrasi Kemahasiswaan & AIK — Google Gemini (AI image generation)",
+      achievements: "Thumbnail Prestasi — Artikel & liputan media resmi",
+      videoThumbnails: "Thumbnail Video — YouTube",
+      references: "Tautan & Data Referensi — Website Resmi SIBERMU (sibermu.ac.id)",
     },
-    copyrightLine1: "© 2026 SiberMu — Universitas Siber Muhammadiyah.",
+    copyrightLine1: "© 2026 SIBERMU — Universitas Siber Muhammadiyah.",
     copyrightLine2: "Seluruh hak cipta dilindungi.",
   },
 };

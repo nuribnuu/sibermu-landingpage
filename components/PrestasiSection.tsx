@@ -4,12 +4,13 @@ import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
 import { useDynamicSectionHeight } from "@/hooks/useDynamicSectionHeight";
+import MobileReveal from "@/components/MobileReveal";
 
 export const section5PrestasiData = {
   id: {
     headline: "Prestasi",
     subheadline:
-      "Ruang bagi mahasiswa SiberMu untuk menguji ide, kreativitas, dan kemampuan mereka hingga melampaui bangku kuliah.",
+      "Ruang bagi mahasiswa SIBERMU untuk menguji ide, kreativitas, dan kemampuan mereka hingga melampaui bangku kuliah.",
     cardCta: "Selengkapnya",
     items: [
       {
@@ -19,17 +20,17 @@ export const section5PrestasiData = {
         description:
           "Nada Pratiwi dan Rahmat Simbolon raih Juara 2 Lomba Esai Ilmiah Nasional MIDBRAIN UIN Malang 2023.",
         image:
-          "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800&auto=format&fit=crop",
+          "/section/achievements/juara-2-esai.png",
         link: "https://sibermu.ac.id/en/artikel/mahasiswa-sibermu-berhasil-juarai-lomba-esai-ilmiah-tingkat-nasional-medical-scientific-competition-and-award-of-uin-malang-midbrain-2023/",
       },
       {
         id: "2",
-        categoryLabel: "Internasional",
+        categoryLabel: "Nasional",
         title: "Bronze Medal & Best Presenter Internasional",
         description:
-          "Mahasiswa SiberMu meraih Bronze Medal & Best Presenter Award di ajang Global Leadership for Sustainable Economy and Well-Being.",
+          "Mahasiswa SIBERMU meraih Bronze Medal & Best Presenter Award di ajang Global Leadership for Sustainable Economy and Well-Being.",
         image:
-          "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800&auto=format&fit=crop",
+          "/section/achievements/bronze-medal.png",
         link: "https://www.instagram.com/p/DX_YuVKAcc2/?img_index=1",
       },
       {
@@ -39,7 +40,7 @@ export const section5PrestasiData = {
         description:
           "Lanang Febria Galing Gumilang lulus sidang Tugas Akhir dan mempublikasikan penelitian hukumnya pada jurnal nasional terakreditasi.",
         image:
-          "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=800&auto=format&fit=crop",
+          "/section/achievements/publikasi-jurnal-nasional.jpeg",
         link: "https://sibermu.ac.id/kosong/mahasiswa-s1-pjj-hukum-sibermu-lulus-ujian-tugas-akhir-dan-publikasikan-penelitian-pada-jurnal-nasional-terakreditasi/",
       },
       {
@@ -49,7 +50,7 @@ export const section5PrestasiData = {
         description:
           "Rahmania Arunita terpilih sebagai Juara Pesona Kartini Nusantara 2025, mewakili semangat perempuan muda inspiratif Indonesia.",
         image:
-          "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop",
+          "/section/achievements/juara-pesona-kartini.jpeg",
         link: "https://www.kompasiana.com/feraagustina21/681e1ac3ed64155c10754302/rahmania-arunita-mahasiwi-universitas-siber-muhammadiyah-yogyakarta-asal-samarinda-timur-raih-juara-pesona-kartini-nusantara-2025",
       },
       {
@@ -57,9 +58,9 @@ export const section5PrestasiData = {
         categoryLabel: "Nasional",
         title: "Capaian Gemilang di Kompetisi Akademik Nasional",
         description:
-          "Fitria Nisail Laily, mahasiswa Prodi Hukum SiberMu, meraih capaian gemilang dalam berbagai kompetisi akademik tingkat nasional.",
+          "Fitria Nisail Laily, mahasiswa Prodi Hukum SIBERMU, meraih capaian gemilang dalam berbagai kompetisi akademik tingkat nasional.",
         image:
-          "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=800&auto=format&fit=crop",
+          "/section/achievements/fitria-nisail.png",
         link: "https://www.facebook.com/sibermu/posts/prestasi-tidak-lahir-dari-keberuntungan-tetapi-dari-kerja-keras-konsistensi-dan-/1455892489623607/",
       },
       {
@@ -68,9 +69,9 @@ export const section5PrestasiData = {
         title:
           "Juara 1 Best Presentation Project — Indonesian Youth Excursion Network Malaysia",
         description:
-          "Amelia, mahasiswa SiberMu, meraih 1st Best Presentation Project di ajang Indonesian Youth Excursion Network #10 di Malaysia.",
+          "Amelia, mahasiswa SIBERMU, meraih 1st Best Presentation Project di ajang Indonesian Youth Excursion Network #10 di Malaysia.",
         image:
-          "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?q=80&w=800&auto=format&fit=crop",
+          "/section/achievements/best-presentation-project.png",
         link: "https://www.instagram.com/p/DGKUyiFhapH/?img_index=1",
       },
     ],
@@ -78,8 +79,8 @@ export const section5PrestasiData = {
   en: {
     headline: "Achievements",
     subheadline:
-      "A space for SiberMu students to test their ideas, creativity, and abilities beyond the classroom.",
-    cardCta: "Read More",
+      "A space for SIBERMU students to test their ideas, creativity, and abilities beyond the classroom.",
+    cardCta: "See More",
     items: [
       {
         id: "1",
@@ -88,7 +89,7 @@ export const section5PrestasiData = {
         description:
           "Nada Pratiwi and Rahmat Simbolon won 2nd place in the MIDBRAIN 2023 National Scientific Essay Competition at UIN Malang.",
         image:
-          "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800&auto=format&fit=crop",
+          "/section/achievements/juara-2-esai.png",
         link: "https://sibermu.ac.id/en/artikel/mahasiswa-sibermu-berhasil-juarai-lomba-esai-ilmiah-tingkat-nasional-medical-scientific-competition-and-award-of-uin-malang-midbrain-2023/",
       },
       {
@@ -96,9 +97,9 @@ export const section5PrestasiData = {
         categoryLabel: "International",
         title: "International Bronze Medal & Best Presenter",
         description:
-          "SiberMu students won a Bronze Medal & Best Presenter Award at the Global Leadership for Sustainable Economy and Well-Being forum.",
+          "SIBERMU students won a Bronze Medal & Best Presenter Award at the Global Leadership for Sustainable Economy and Well-Being forum.",
         image:
-          "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800&auto=format&fit=crop",
+          "/section/achievements/bronze-medal.png",
         link: "https://www.instagram.com/p/DX_YuVKAcc2/?img_index=1",
       },
       {
@@ -108,7 +109,7 @@ export const section5PrestasiData = {
         description:
           "Lanang Febria Galing Gumilang passed his thesis defense and published his legal research in an accredited national journal.",
         image:
-          "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=800&auto=format&fit=crop",
+          "/section/achievements/publikasi-jurnal-nasional.jpeg",
         link: "https://sibermu.ac.id/kosong/mahasiswa-s1-pjj-hukum-sibermu-lulus-ujian-tugas-akhir-dan-publikasikan-penelitian-pada-jurnal-nasional-terakreditasi/",
       },
       {
@@ -118,7 +119,7 @@ export const section5PrestasiData = {
         description:
           "Rahmania Arunita was crowned winner of Pesona Kartini Nusantara 2025, representing the spirit of inspiring young Indonesian women.",
         image:
-          "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop",
+          "/section/achievements/juara-pesona-kartini.jpeg",
         link: "https://www.kompasiana.com/feraagustina21/681e1ac3ed64155c10754302/rahmania-arunita-mahasiwi-universitas-siber-muhammadiyah-yogyakarta-asal-samarinda-timur-raih-juara-pesona-kartini-nusantara-2025",
       },
       {
@@ -126,9 +127,9 @@ export const section5PrestasiData = {
         categoryLabel: "National",
         title: "Outstanding Achievements in National Academic Competitions",
         description:
-          "Fitria Nisail Laily, a SiberMu Law student, achieved outstanding results in various national academic competitions.",
+          "Fitria Nisail Laily, a SIBERMU Law student, achieved outstanding results in various national academic competitions.",
         image:
-          "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=800&auto=format&fit=crop",
+          "/section/achievements/fitria-nisail.png",
         link: "https://www.facebook.com/sibermu/posts/prestasi-tidak-lahir-dari-keberuntungan-tetapi-dari-kerja-keras-konsistensi-dan-/1455892489623607/",
       },
       {
@@ -137,9 +138,9 @@ export const section5PrestasiData = {
         title:
           "1st Place Best Presentation Project — Indonesian Youth Excursion Network Malaysia",
         description:
-          "Amelia, a SiberMu student, won 1st Best Presentation Project at the 10th Indonesian Youth Excursion Network event in Malaysia.",
+          "Amelia, a SIBERMU student, won 1st Best Presentation Project at the 10th Indonesian Youth Excursion Network event in Malaysia.",
         image:
-          "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?q=80&w=800&auto=format&fit=crop",
+          "/section/achievements/best-presentation-project.png",
         link: "https://www.instagram.com/p/DGKUyiFhapH/?img_index=1",
       },
     ],
@@ -278,18 +279,23 @@ export default function PrestasiSection() {
         
         {/* HEADER BLOCK */}
         <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
-          <h2 className="font-bold text-4xl sm:text-5xl lg:text-[clamp(2.25rem,3.5vw,3.125rem)] text-white leading-[1.2] tracking-tight mb-3">
-            <span className="headline-marker headline-marker-2">
-              {t("section5.headline") || content.headline}
-            </span>
-          </h2>
-          <p className="text-white/70 text-base sm:text-lg leading-[1.65] font-normal">
-            {t("section5.subheadline") || content.subheadline}
-          </p>
+          <MobileReveal delay={0} rotate={-1.5}>
+            <h2 className="font-bold text-4xl sm:text-5xl lg:text-[clamp(2.25rem,3.5vw,3.125rem)] text-white leading-[1.2] tracking-tight mb-3">
+              <span className="headline-marker headline-marker-2">
+                {t("section5.headline") || content.headline}
+              </span>
+            </h2>
+          </MobileReveal>
+
+          <MobileReveal delay={100}>
+            <p className="text-white/70 text-base sm:text-lg leading-[1.65] font-normal">
+              {t("section5.subheadline") || content.subheadline}
+            </p>
+          </MobileReveal>
         </div>
 
         {/* CAROUSEL WRAPPER WITH OVERLAPPING CIRCULAR NAVIGATION ARROWS */}
-        <div className="relative max-w-6xl mx-auto px-2 sm:px-4">
+        <MobileReveal delay={150} rotate={1.5} className="relative max-w-6xl mx-auto px-2 sm:px-4">
           
           {/* LEFT CIRCULAR ARROW BUTTON */}
           <button
@@ -348,7 +354,7 @@ export default function PrestasiSection() {
                   <h3 className="font-bold text-xs sm:text-base lg:text-lg text-[#1A2A5B] leading-snug mb-1.5 sm:mb-2 line-clamp-2">
                     {item.title}
                   </h3>
-                  <p className="text-[#706F6F] text-[11px] sm:text-xs lg:text-sm leading-snug sm:leading-relaxed font-normal line-clamp-3 sm:line-clamp-4">
+                  <p className="text-[#706F6F] text-[11px] sm:text-xs lg:text-sm leading-snug sm:leading-relaxed font-normal line-clamp-3">
                     {item.description}
                   </p>
                 </div>
@@ -372,7 +378,7 @@ export default function PrestasiSection() {
             ))}
           </div>
 
-        </div>
+        </MobileReveal>
 
       </div>
     </section>

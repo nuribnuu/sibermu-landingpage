@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { LanguageProvider } from "@/context/LanguageContext";
+import CustomCursor from "@/components/CustomCursor";
 
 export const metadata: Metadata = {
-  title: "SiberMu - Digital Experience Universitas Siber Muhammadiyah",
+  title: "SIBERMU - Digital Experience Universitas Siber Muhammadiyah",
   description: "Bertumbuh dengan Ilmu, Berkarya dengan Nilai.",
 };
 
@@ -16,6 +17,7 @@ export default function RootLayout({
     <html lang="id" className="no-scrollbar">
       <body className="no-scrollbar bg-black text-white antialiased">
         <LanguageProvider>
+          <CustomCursor />
           {children}
         </LanguageProvider>
       </body>

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
 import { useInfiniteLoopSlider } from "@/hooks/useInfiniteLoopSlider";
 import { useDynamicSectionHeight } from "@/hooks/useDynamicSectionHeight";
+import MobileReveal from "@/components/MobileReveal";
 
 export interface AikCardItem {
   id: string;
@@ -32,12 +33,14 @@ export const section7AikData = {
   id: {
     headline: "Kegiatan Keagamaan, Kajian & Syiar",
     subheadline:
-      "Dari peringatan hari besar Islam, kajian pembinaan Al-Islam dan Kemuhammadiyahan, hingga syiar dakwah digital — nilai Islam menjadi landasan setiap kegiatan di SiberMu.",
+      "Dari peringatan hari besar Islam, kajian pembinaan Al-Islam dan Kemuhammadiyahan, hingga syiar dakwah digital — nilai Islam menjadi landasan setiap kegiatan di SIBERMU.",
+    cardCta: "Selengkapnya",
   },
   en: {
     headline: "Religious Activities, Study Sessions & Da'wah",
     subheadline:
-      "From Islamic holiday observances and Al-Islam and Kemuhammadiyahan study sessions to digital da'wah outreach — Islamic values are the foundation of every activity at SiberMu.",
+      "From Islamic holiday observances and Al-Islam and Kemuhammadiyahan study sessions to digital da'wah outreach — Islamic values are the foundation of every activity at SIBERMU.",
+    cardCta: "See More",
   },
 };
 
@@ -55,7 +58,7 @@ export const aikCardsList: AikCardItem[] = [
     },
     image: "https://img.youtube.com/vi/R2ZvAveoX6A/hqdefault.jpg",
     link: "https://www.youtube.com/live/R2ZvAveoX6A",
-    ctaText: { id: "Tonton", en: "Watch" },
+    ctaText: { id: "Selengkapnya", en: "See More" },
   },
   {
     id: "2",
@@ -70,7 +73,7 @@ export const aikCardsList: AikCardItem[] = [
     },
     image: "https://img.youtube.com/vi/tLVh8KxbtXY/hqdefault.jpg",
     link: "https://www.youtube.com/live/tLVh8KxbtXY",
-    ctaText: { id: "Tonton", en: "Watch" },
+    ctaText: { id: "Selengkapnya", en: "See More" },
   },
   {
     id: "3",
@@ -85,7 +88,7 @@ export const aikCardsList: AikCardItem[] = [
     },
     image: "https://img.youtube.com/vi/PeSJxevG-9I/hqdefault.jpg",
     link: "https://youtu.be/PeSJxevG-9I",
-    ctaText: { id: "Tonton", en: "Watch" },
+    ctaText: { id: "Selengkapnya", en: "See More" },
   },
   {
     id: "4",
@@ -95,27 +98,27 @@ export const aikCardsList: AikCardItem[] = [
       en: "Al-Islam and Kemuhammadiyahan Study & Reinforcement Session",
     },
     description: {
-      id: "Kajian pembinaan untuk memperkuat pemahaman nilai Al-Islam dan Kemuhammadiyahan di lingkungan SiberMu.",
-      en: "A study session to strengthen understanding of Al-Islam and Kemuhammadiyahan values within the SiberMu community.",
+      id: "Kajian pembinaan untuk memperkuat pemahaman nilai Al-Islam dan Kemuhammadiyahan di lingkungan SIBERMU.",
+      en: "A study session to strengthen understanding of Al-Islam and Kemuhammadiyahan values within the SIBERMU community.",
     },
     image: "https://img.youtube.com/vi/iEEzDisMkSw/hqdefault.jpg",
     link: "https://www.youtube.com/live/iEEzDisMkSw",
-    ctaText: { id: "Tonton", en: "Watch" },
+    ctaText: { id: "Selengkapnya", en: "See More" },
   },
   {
     id: "5",
     categoryLabel: { id: "Kajian", en: "Study Session" },
     title: {
-      id: "Pengajian Bersama Milad 1 Tahun SiberMu",
-      en: "Pengajian on SiberMu's 1st Anniversary",
+      id: "Pengajian Bersama Milad 1 Tahun SIBERMU",
+      en: "Pengajian on SIBERMU's 1st Anniversary",
     },
     description: {
-      id: "Pengajian bersama dalam rangkaian Closing Ceremony Milad 1 Tahun SiberMu.",
-      en: "A joint religious gathering as part of the Closing Ceremony for SiberMu's 1st anniversary (Milad).",
+      id: "Pengajian bersama dalam rangkaian Closing Ceremony Milad 1 Tahun SIBERMU.",
+      en: "A joint religious gathering as part of the Closing Ceremony for SIBERMU's 1st anniversary (Milad).",
     },
     image: "https://img.youtube.com/vi/yI7aHNmfoYc/hqdefault.jpg",
     link: "https://www.youtube.com/live/yI7aHNmfoYc",
-    ctaText: { id: "Tonton", en: "Watch" },
+    ctaText: { id: "Selengkapnya", en: "See More" },
   },
   {
     id: "6",
@@ -125,12 +128,12 @@ export const aikCardsList: AikCardItem[] = [
       en: "Muhammadiyah Digital Da'wah Center (PSDM)",
     },
     description: {
-      id: "Unit dakwah digital Muhammadiyah yang berintegrasi dengan platform MOOCs SiberMu, menghadirkan pelatihan literasi digital untuk masyarakat umum.",
-      en: "Muhammadiyah's digital da'wah unit, integrated with SiberMu's MOOCs platform, offering digital literacy training for the public.",
+      id: "Unit dakwah digital Muhammadiyah yang berintegrasi dengan platform MOOCs SIBERMU, menghadirkan pelatihan literasi digital untuk masyarakat umum.",
+      en: "Muhammadiyah's digital da'wah unit, integrated with SIBERMU's MOOCs platform, offering digital literacy training for the public.",
     },
     image: "/section/syiar/psdm.webp",
     link: "https://moocs.sibermu.ac.id/course/view.php?id=130",
-    ctaText: { id: "Selengkapnya", en: "Read More" },
+    ctaText: { id: "Selengkapnya", en: "See More" },
   },
 ];
 
@@ -176,18 +179,23 @@ export default function AikSection() {
         
         {/* HEADER BLOCK */}
         <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
-          <h2 className="font-bold text-4xl sm:text-5xl lg:text-[clamp(2.25rem,3.5vw,3.125rem)] text-white leading-[1.2] tracking-tight mb-3">
-            <span className="headline-marker headline-marker-1">
-              {t("section7.headline") || content.headline}
-            </span>
-          </h2>
-          <p className="text-white/80 text-base sm:text-lg leading-[1.65] font-normal">
-            {t("section7.subheadline") || content.subheadline}
-          </p>
+          <MobileReveal delay={0} rotate={-1.5}>
+            <h2 className="font-bold text-4xl sm:text-5xl lg:text-[clamp(2.25rem,3.5vw,3.125rem)] text-white leading-[1.2] tracking-tight mb-3">
+              <span className="headline-marker headline-marker-1">
+                {t("section7.headline") || content.headline}
+              </span>
+            </h2>
+          </MobileReveal>
+
+          <MobileReveal delay={100}>
+            <p className="text-white/80 text-base sm:text-lg leading-[1.65] font-normal">
+              {t("section7.subheadline") || content.subheadline}
+            </p>
+          </MobileReveal>
         </div>
 
         {/* CAROUSEL WRAPPER WITH OVERLAPPING CIRCULAR NAVIGATION ARROWS */}
-        <div className="relative max-w-6xl mx-auto px-2 sm:px-4">
+        <MobileReveal delay={150} rotate={1.5} className="relative max-w-6xl mx-auto px-2 sm:px-4">
           
           {/* LEFT CIRCULAR ARROW BUTTON */}
           <button
@@ -224,7 +232,7 @@ export default function AikSection() {
               const label = item.categoryLabel[locale] || item.categoryLabel.id;
               const cardTitle = item.title[locale] || item.title.id;
               const cardDesc = item.description[locale] || item.description.id;
-              const cta = item.ctaText[locale] || item.ctaText.id;
+              const cta = content.cardCta || item.ctaText[locale] || item.ctaText.id;
 
               return (
                 <div
@@ -239,7 +247,6 @@ export default function AikSection() {
                           src={item.image}
                           alt={cardTitle}
                           fill
-                          unoptimized
                           sizes="(max-width: 768px) 50vw, 25vw"
                           className="object-cover object-center group-hover:scale-105 transition-transform duration-500 rounded-none pointer-events-none"
                         />
@@ -257,7 +264,7 @@ export default function AikSection() {
                     </h3>
 
                     {/* CARD DESCRIPTION */}
-                    <p className="text-[#706F6F] text-[11px] sm:text-xs lg:text-sm leading-snug sm:leading-relaxed font-normal line-clamp-3 sm:line-clamp-4">
+                    <p className="text-[#706F6F] text-[11px] sm:text-xs lg:text-sm leading-snug sm:leading-relaxed font-normal line-clamp-3">
                       {cardDesc}
                     </p>
                   </div>
@@ -282,7 +289,7 @@ export default function AikSection() {
             })}
           </div>
 
-        </div>
+        </MobileReveal>
 
       </div>
     </section>

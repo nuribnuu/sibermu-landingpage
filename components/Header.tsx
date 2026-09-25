@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
 import LanguageDropdown from "@/components/LanguageDropdown";
 import MegaMenu from "@/components/MegaMenu";
+import { smoothScrollToTarget, getTargetScrollTop } from "@/utils/smoothScroll";
 
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect;
@@ -84,18 +85,18 @@ export default function Header() {
       e.preventDefault();
       const targetId = href.replace(/^\/?#/, "");
       
+      const wasBottomSheetOpen = isBottomSheetOpen;
       isNavigatingRef.current = true;
       setIsBottomSheetOpen(false);
       setActiveMegaMenu(null);
 
-      const targetY = getTargetScrollTop(targetId);
+      const delay = wasBottomSheetOpen ? 120 : 0;
 
-      requestAnimationFrame(() => {
-        window.scrollTo({ top: targetY, behavior: "smooth" });
-        setTimeout(() => {
+      setTimeout(() => {
+        smoothScrollToTarget(targetId, undefined, () => {
           isNavigatingRef.current = false;
-        }, 150);
-      });
+        });
+      }, delay);
     }
   };
 
@@ -250,11 +251,9 @@ export default function Header() {
         body.style.width = origBodyWidth;
         body.style.left = origBodyLeft;
 
-        if (!isNavigatingRef.current) {
-          root.style.scrollBehavior = "auto";
-          window.scrollTo({ top: scrollY, left: 0, behavior: "instant" });
-          root.style.scrollBehavior = origScrollBehavior;
-        }
+        root.style.scrollBehavior = "auto";
+        window.scrollTo({ top: scrollY, left: 0, behavior: "instant" });
+        root.style.scrollBehavior = origScrollBehavior;
 
         window.removeEventListener("keydown", handleKeyDown);
       };
@@ -329,120 +328,122 @@ export default function Header() {
     <>
       {/* TOP HEADER */}
       <header
-        className={`fixed top-0 left-0 right-0 z-[100] w-full h-14 sm:h-16 lg:h-[76px] px-4 sm:px-6 lg:px-8 flex items-center justify-between transition-all duration-300 ease-in-out ${headerStyleClass}`}
+        className={`fixed top-0 left-0 right-0 z-[130] w-full h-14 sm:h-16 lg:h-[76px] transition-all duration-300 ease-in-out ${headerStyleClass}`}
       >
-        {/* LOGO SIBERMU */}
-        <a
-          href="#hero"
-          onClick={(e) => handleAnchorClick(e, "#hero")}
-          className="flex items-center group focus:outline-none shrink-0 cursor-pointer"
-        >
-          <Image
-            src="/logo.png"
-            alt="SiberMu Logo"
-            width={130}
-            height={34}
-            className={`h-6 sm:h-7 lg:h-8 w-auto object-contain transition-all duration-300 group-hover:scale-105 ${
-              isLight
-                ? "[filter:brightness(0)_opacity(0.85)]"
-                : "brightness-100"
-            }`}
-            priority
-          />
-        </a>
+        <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 h-full flex items-center justify-between">
+          {/* LOGO SIBERMU */}
+          <a
+            href="#hero"
+            onClick={(e) => handleAnchorClick(e, "#hero")}
+            className="flex items-center group focus:outline-none shrink-0 cursor-pointer"
+          >
+            <Image
+              src="/logo.png"
+              alt="SIBERMU Logo"
+              width={130}
+              height={34}
+              className={`h-6 sm:h-7 lg:h-8 w-auto object-contain transition-all duration-300 group-hover:scale-105 ${
+                isLight
+                  ? "[filter:brightness(0)_opacity(0.85)]"
+                  : "brightness-100"
+              }`}
+              priority
+            />
+          </a>
 
-        {/* DESKTOP NAVIGATION LINKS */}
-        <nav className="hidden lg:flex items-center space-x-7 xl:space-x-9">
-          {navItems.map((item) => {
-            const isMegaOpen = activeMegaMenu === item.megaKey;
-            const isActive = activeNavKey === item.key;
+          {/* DESKTOP NAVIGATION LINKS */}
+          <nav className="hidden lg:flex items-center space-x-7 xl:space-x-9">
+            {navItems.map((item) => {
+              const isMegaOpen = activeMegaMenu === item.megaKey;
+              const isActive = activeNavKey === item.key;
 
-            const textColorClass = isLight
-              ? isActive || isMegaOpen
-                ? "text-[#1A2A5B] font-bold underline underline-offset-4 decoration-2 decoration-[#1A2A5B]"
-                : "text-[#1A2A5B]/90 hover:text-[#1A2A5B] hover:underline hover:underline-offset-4 hover:decoration-2"
-              : isActive || isMegaOpen
-                ? "text-white font-bold underline underline-offset-4 decoration-2 decoration-white"
-                : "text-white/90 hover:text-white hover:underline hover:underline-offset-4 hover:decoration-2";
+              const textColorClass = isLight
+                ? isActive || isMegaOpen
+                  ? "text-[#1A2A5B] font-bold underline underline-offset-4 decoration-2 decoration-[#1A2A5B]"
+                  : "text-[#1A2A5B]/90 hover:text-[#1A2A5B] hover:underline hover:underline-offset-4 hover:decoration-2"
+                : isActive || isMegaOpen
+                  ? "text-white font-bold underline underline-offset-4 decoration-2 decoration-white"
+                  : "text-white/90 hover:text-white hover:underline hover:underline-offset-4 hover:decoration-2";
 
-            return (
-              <div
-                key={item.key}
-                className="relative py-2"
-                onMouseEnter={() => handleMouseEnter(item)}
-              >
-                <a
-                  href={item.href}
-                  onClick={(e) => handleAnchorClick(e, item.href)}
-                  className={`text-[14px] sm:text-[15px] font-medium transition-colors duration-300 ease-in-out flex items-center space-x-1.5 cursor-pointer ${textColorClass}`}
+              return (
+                <div
+                  key={item.key}
+                  className="relative py-2"
+                  onMouseEnter={() => handleMouseEnter(item)}
                 >
-                  {item.key === "home" && (
-                    <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                    </svg>
-                  )}
-                  {item.key === "kemahasiswaan" && (
-                    <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M12 14l9-5-9-5-9 5 9 5z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-                    </svg>
-                  )}
-                  {item.key === "aik" && (
-                    <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
-                  )}
-                  <span>{item.label}</span>
-                  {item.hasMega && (
-                    <svg
-                      className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                        isLight ? "text-[#1A2A5B]/70" : "text-white/80"
-                      } ${isMegaOpen ? "rotate-180" : ""}`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  )}
-                </a>
-              </div>
-            );
-          })}
-        </nav>
+                  <a
+                    href={item.href}
+                    onClick={(e) => handleAnchorClick(e, item.href)}
+                    className={`text-[14px] sm:text-[15px] font-medium transition-colors duration-300 ease-in-out flex items-center space-x-1.5 cursor-pointer ${textColorClass}`}
+                  >
+                    {item.key === "home" && (
+                      <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                      </svg>
+                    )}
+                    {item.key === "kemahasiswaan" && (
+                      <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M12 14l9-5-9-5-9 5 9 5z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                      </svg>
+                    )}
+                    {item.key === "aik" && (
+                      <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                      </svg>
+                    )}
+                    <span>{item.label}</span>
+                    {item.hasMega && (
+                      <svg
+                        className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                          isLight ? "text-[#1A2A5B]/70" : "text-white/80"
+                        } ${isMegaOpen ? "rotate-180" : ""}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    )}
+                  </a>
+                </div>
+              );
+            })}
+          </nav>
 
-        {/* DESKTOP ACTIONS */}
-        <div className="hidden lg:flex items-center space-x-5 shrink-0">
-          <LanguageDropdown theme={headerTheme} />
-          <a
-            href="https://admissions.sibermu.ac.id/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`font-medium text-sm transition-colors duration-300 whitespace-nowrap cursor-pointer ${
-              isLight
-                ? "text-[#1A2A5B] hover:text-[#1A2A5B] hover:underline hover:underline-offset-4 hover:decoration-2"
-                : "text-white hover:text-white hover:underline hover:underline-offset-4 hover:decoration-2"
-            }`}
-          >
-            {t("nav.register")}
-          </a>
-        </div>
+          {/* DESKTOP ACTIONS */}
+          <div className="hidden lg:flex items-center space-x-5 shrink-0 relative z-[130]">
+            <LanguageDropdown theme={headerTheme} />
+            <a
+              href="https://admissions.sibermu.ac.id/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`font-medium text-sm transition-colors duration-300 whitespace-nowrap cursor-pointer ${
+                isLight
+                  ? "text-[#1A2A5B] hover:text-[#1A2A5B] hover:underline hover:underline-offset-4 hover:decoration-2"
+                  : "text-white hover:text-white hover:underline hover:underline-offset-4 hover:decoration-2"
+              }`}
+            >
+              {t("nav.register")}
+            </a>
+          </div>
 
-        {/* MOBILE TOP ACTIONS */}
-        <div className="flex lg:hidden items-center space-x-3 sm:space-x-4 shrink-0">
-          <LanguageDropdown theme={headerTheme} />
-          <a
-            href="https://admissions.sibermu.ac.id/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`font-medium text-xs sm:text-sm transition-colors duration-300 whitespace-nowrap cursor-pointer ${
-              isLight
-                ? "text-[#1A2A5B] hover:text-[#1A2A5B] hover:underline hover:underline-offset-4 hover:decoration-2"
-                : "text-white hover:text-white hover:underline hover:underline-offset-4 hover:decoration-2"
-            }`}
-          >
-            {t("nav.register")}
-          </a>
+          {/* MOBILE TOP ACTIONS */}
+          <div className="flex lg:hidden items-center space-x-3 sm:space-x-4 shrink-0 relative z-[130]">
+            <LanguageDropdown theme={headerTheme} />
+            <a
+              href="https://admissions.sibermu.ac.id/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`font-medium text-xs sm:text-sm transition-colors duration-300 whitespace-nowrap cursor-pointer ${
+                isLight
+                  ? "text-[#1A2A5B] hover:text-[#1A2A5B] hover:underline hover:underline-offset-4 hover:decoration-2"
+                  : "text-white hover:text-white hover:underline hover:underline-offset-4 hover:decoration-2"
+              }`}
+            >
+              {t("nav.register")}
+            </a>
+          </div>
         </div>
 
         {/* Mega Menu Overlay (Desktop) */}
@@ -524,7 +525,12 @@ export default function Header() {
         {/* 4. More */}
         <button
           type="button"
-          onClick={() => setIsBottomSheetOpen(true)}
+          onClick={() => {
+            if (typeof window !== "undefined") {
+              window.dispatchEvent(new Event("close-chatbot-popup"));
+            }
+            setIsBottomSheetOpen(true);
+          }}
           className="flex flex-col items-center justify-center text-center space-y-1 w-20 sm:w-24 px-1 transition-colors relative group cursor-pointer"
         >
           <div className={`absolute -top-6 w-11 h-11 rounded-none flex items-center justify-center border-[3.5px] border-[#120e36] shadow-[0_4px_14px_rgba(255,158,68,0.45)] transition-all duration-200 group-hover:scale-105 group-active:scale-95 ${
