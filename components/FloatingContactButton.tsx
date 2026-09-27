@@ -84,7 +84,7 @@ export default function FloatingContactButton() {
       {/* FLOATING ACTION BUTTON (FAB) CONTAINER */}
       <div
         ref={fabRef}
-        className={`fixed bottom-24 right-5 sm:right-6 lg:bottom-8 lg:right-8 z-[110] flex flex-col items-end pointer-events-auto select-none ${
+        className={`fixed bottom-28 right-5 sm:right-6 lg:bottom-8 lg:right-8 z-[110] flex flex-col items-end pointer-events-auto select-none ${
           isChatbotOpen ? "hidden lg:flex" : "flex"
         }`}
         aria-label="Floating Contact Menu"

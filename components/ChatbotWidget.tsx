@@ -252,7 +252,7 @@ export default function ChatbotWidget({ isOpen, onClose }: ChatbotWidgetProps) {
   return (
     <div
       ref={popupRef}
-      className="fixed bottom-20 right-4 sm:right-6 lg:bottom-8 lg:right-8 z-[120] w-[calc(100vw-2rem)] sm:w-[375px] h-[530px] max-h-[82vh] bg-white rounded-none border-[3.5px] border-black shadow-[8px_8px_0px_#000000] flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-300 ease-out"
+      className="fixed bottom-28 right-4 sm:right-6 lg:bottom-8 lg:right-8 z-[120] w-[calc(100vw-2rem)] sm:w-[375px] h-[530px] max-h-[calc(100vh-140px)] lg:max-h-[82vh] bg-white rounded-none border-[3.5px] border-black shadow-[8px_8px_0px_#000000] flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-300 ease-out"
       aria-label="SIBERMU ASSISTANT FAQ Chatbot Window"
     >
       {/* 1. HEADER (NEOBRUTALISM STYLING & BILINGUAL) */}
