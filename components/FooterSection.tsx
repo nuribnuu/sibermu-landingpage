@@ -143,11 +143,8 @@ export default function FooterSection() {
     <footer
       id="footer"
       data-theme="light"
-      className="relative z-[91] w-full bg-slate-50 text-[#1A2A5B] border-t-4 border-[#ff9e44] pt-14 sm:pt-16 lg:pt-20 pb-32 sm:pb-28 lg:pb-20 overflow-hidden"
+      className="relative z-[91] w-full bg-white text-[#1A2A5B] border-t-4 border-[#ff9e44] pt-14 sm:pt-16 lg:pt-20 pb-32 sm:pb-28 lg:pb-20 overflow-hidden"
     >
-      {/* Subtle Dot Grid Background Pattern */}
-      <div className="dot-grid-pattern-light" aria-hidden="true" />
-
       {/* Main Container */}
       <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 relative z-10">
         {/* 4-COLUMN BALANCED GRID LAYOUT */}

@@ -242,44 +242,24 @@ body::-webkit-scrollbar {
   }
 }
 
-/* REUSABLE SUBTLE DOT GRID BACKGROUND PATTERN (LIGHT SECTIONS) */
-.dot-grid-pattern-light {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: radial-gradient(
-    circle,
-    rgba(26, 42, 91, 0.1) 1.5px,
-    transparent 1.5px
-  );
-  background-size: 22px 22px;
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    black 15%,
-    black 85%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    black 15%,
-    black 85%,
-    transparent 100%
-  );
-  z-index: 0;
-}
-
-/* REUSABLE SUBTLE DOT GRID BACKGROUND PATTERN (DARK SECTIONS) */
+/* REUSABLE SUBTLE DOT GRID BACKGROUND PATTERN CONTAINERS */
+.dot-grid-pattern-light,
 .dot-grid-pattern-dark {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background-image: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.08) 1.5px,
-    transparent 1.5px
-  );
+  z-index: 0;
+}
+
+/* SHARED PROPERTIES FOR BASE (::before) AND ANIMATED OVERLAY (::after) LAYERS */
+.dot-grid-pattern-light::before,
+.dot-grid-pattern-light::after,
+.dot-grid-pattern-dark::before,
+.dot-grid-pattern-dark::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
   background-size: 22px 22px;
   -webkit-mask-image: linear-gradient(
     to bottom,
@@ -295,7 +275,76 @@ body::-webkit-scrollbar {
     black 85%,
     transparent 100%
   );
-  z-index: 0;
+}
+
+/* BASE LAYER (::before) - ALWAYS VISIBLE STATIC DOT GRID */
+.dot-grid-pattern-light::before {
+  background-image: radial-gradient(
+    circle,
+    rgba(26, 42, 91, 0.25) 2px,
+    transparent 2px
+  );
+  opacity: 0.4;
+}
+
+.dot-grid-pattern-dark::before {
+  background-image: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.18) 2px,
+    transparent 2px
+  );
+  opacity: 0.4;
+}
+
+/* ANIMATED OVERLAY LAYER (::after) - DRIFT + BREATHING PULSE */
+.dot-grid-pattern-light::after {
+  background-image: radial-gradient(
+    circle,
+    rgba(26, 42, 91, 0.25) 2px,
+    transparent 2px
+  );
+  animation: dotDrift 20s linear infinite, dotBreathe 6s ease-in-out infinite;
+  will-change: background-position, background-size, opacity;
+}
+
+.dot-grid-pattern-dark::after {
+  background-image: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.18) 2px,
+    transparent 2px
+  );
+  animation: dotDrift 20s linear infinite, dotBreathe 6s ease-in-out infinite;
+  will-change: background-position, background-size, opacity;
+}
+
+/* CONTINUOUS AMBIENT ANIMATION FOR DOT GRID PATTERNS (DRIFT + BREATHING + SCALE PULSE) */
+@keyframes dotDrift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 44px 44px;
+  }
+}
+
+@keyframes dotBreathe {
+  0%, 100% {
+    opacity: 0.25;
+    background-size: 22px 22px;
+  }
+  50% {
+    opacity: 0.85;
+    background-size: 25px 25px;
+  }
+}
+
+/* ACCESSIBILITY: REDUCED MOTION USERS RECEIVE ONLY THE STATIC BASE LAYER */
+@media (prefers-reduced-motion: reduce) {
+  .dot-grid-pattern-light::after,
+  .dot-grid-pattern-dark::after {
+    animation: none !important;
+    opacity: 0 !important;
+  }
 }
 
 @keyframes spin-reverse {
