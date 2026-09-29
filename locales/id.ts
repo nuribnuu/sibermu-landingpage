@@ -14,14 +14,14 @@ export const id = {
   megaMenu: {
     kemahasiswaan: {
       item1: "Organisasi & Unit Kegiatan Mahasiswa (UKM)",
-      item2: "Prestasi Mahasiswa",
-      item3: "Layanan Mahasiswa",
+      item2: "Prestasi",
+      item3: "Layanan",
       promoTitle: "BEREDUKASI & BERKARYA",
       promoHeading: "Jelajahi Dunia Kemahasiswaan SIBERMU",
       promoCta: "Jelajahi",
     },
     aik: {
-      item1: "Kegiatan Keagamaan, Kajian & Syiar Dakwah",
+      item1: "Kegiatan Keagamaan, Kajian & Syiar",
       item2: "Nilai Kemuhammadiyahan",
       promoTitle: "BERTUMBUH & BERKARYA",
       promoHeading: "Ilmu yang Berakar pada Nilai Keislaman",
