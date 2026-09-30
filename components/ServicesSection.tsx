@@ -599,7 +599,7 @@ export default function ServicesSection() {
 
           <MobileReveal delay={100} className="relative inline-block w-full">
             <div className="paragraph-backdrop-light" aria-hidden="true" />
-            <p className="text-[#706F6F] text-base sm:text-lg leading-[1.65] font-normal">
+            <p className="text-[#706F6F] text-base sm:text-lg leading-[1.65] font-extrabold">
               {subheadline}
             </p>
           </MobileReveal>

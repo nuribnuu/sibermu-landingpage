@@ -291,7 +291,7 @@ export default function StudentOrganizationsSection() {
 
           <MobileReveal delay={100} className="relative inline-block w-full">
             <div className="paragraph-backdrop-light" aria-hidden="true" />
-            <p className="text-[#706F6F] text-sm sm:text-base lg:text-lg leading-[1.65] font-normal">
+            <p className="text-[#706F6F] text-sm sm:text-base lg:text-lg leading-[1.65] font-extrabold">
               {t("section4.subheadline") || content.subheadline}
             </p>
           </MobileReveal>

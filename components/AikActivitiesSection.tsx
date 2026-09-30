@@ -189,7 +189,7 @@ export default function AikActivitiesSection() {
 
           <MobileReveal delay={100} className="relative inline-block w-full">
             <div className="paragraph-backdrop-dark" aria-hidden="true" />
-            <p className="text-white/80 text-base sm:text-lg leading-[1.65] font-normal">
+            <p className="text-white/80 text-base sm:text-lg leading-[1.65] font-extrabold">
               {t("section7.subheadline") || content.subheadline}
             </p>
           </MobileReveal>

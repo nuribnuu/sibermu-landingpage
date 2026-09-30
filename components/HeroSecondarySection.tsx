@@ -118,7 +118,7 @@ export default function HeroSecondarySection() {
             {/* Subheadline */}
             <MobileReveal delay={100} className="relative w-full max-w-[480px]">
               <div className="paragraph-backdrop-light" aria-hidden="true" />
-              <p className="text-[#706F6F] text-base sm:text-lg leading-[1.65] font-normal max-w-[480px] mx-auto lg:mx-0">
+              <p className="text-[#706F6F] text-base sm:text-lg leading-[1.65] font-extrabold max-w-[480px] mx-auto lg:mx-0">
                 {content.subheadline}
               </p>
             </MobileReveal>
