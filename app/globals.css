@@ -76,16 +76,9 @@ body {
   position: relative;
 }
 
-/* Neobrutalism Custom Cursor rules for Desktop */
-@media (min-width: 1024px) and (pointer: fine) {
-  html.custom-cursor-active,
-  html.custom-cursor-active * {
-    cursor: none !important;
-  }
-}
-
-html.loading-active:not(.custom-cursor-active),
-html.loading-active:not(.custom-cursor-active) * {
+/* Cursor rules for Desktop: keep native cursor visible alongside custom cursor */
+html.loading-active,
+html.loading-active * {
   cursor: wait !important;
 }
 
