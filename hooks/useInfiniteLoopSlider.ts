@@ -121,9 +121,27 @@ export function useInfiniteLoopSlider({
     });
   }, [getItemWidth]);
 
-  // Auto-slide every N ms (default: 3000ms = 3 seconds) unless user is dragging or hovering
+  const [isIntersecting, setIsIntersecting] = useState(true);
+
+  // Pause auto-slide when slider is not in viewport
   useEffect(() => {
-    if (!autoSlideIntervalMs || autoSlideIntervalMs <= 0) return;
+    const el = scrollRef.current;
+    if (!el || typeof window === "undefined" || !("IntersectionObserver" in window)) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsIntersecting(entry.isIntersecting);
+      },
+      { rootMargin: "200px 0px 200px 0px" }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Auto-slide every N ms (default: 3000ms = 3 seconds) unless user is dragging, hovering, or off-screen
+  useEffect(() => {
+    if (!autoSlideIntervalMs || autoSlideIntervalMs <= 0 || !isIntersecting) return;
 
     const interval = setInterval(() => {
       if (scrollRef.current && !isMouseDown && !isHovered) {
@@ -132,7 +150,7 @@ export function useInfiniteLoopSlider({
     }, autoSlideIntervalMs);
 
     return () => clearInterval(interval);
-  }, [autoSlideIntervalMs, isMouseDown, isHovered, scroll]);
+  }, [autoSlideIntervalMs, isMouseDown, isHovered, isIntersecting, scroll]);
 
   return {
     scrollRef,
@@ -145,5 +163,6 @@ export function useInfiniteLoopSlider({
     handleMouseMove,
     dragDistance,
     isHovered,
+    isIntersecting,
   };
 }

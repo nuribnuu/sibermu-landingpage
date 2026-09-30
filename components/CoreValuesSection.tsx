@@ -4,6 +4,7 @@ import React from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useDynamicSectionHeight } from "@/hooks/useDynamicSectionHeight";
 import MobileReveal from "@/components/MobileReveal";
+import { useViewportAnimation } from "@/hooks/useViewportAnimation";
 
 export interface CoreValueCard {
   number: string;
@@ -128,8 +129,11 @@ export default function CoreValuesSection() {
   const content = section8ValuesData[locale] || section8ValuesData.id;
   const { containerRef, minHeight, stickyTop } = useDynamicSectionHeight();
 
+  const { ref: sectionRef, isIntersecting } = useViewportAnimation<HTMLElement>();
+
   return (
     <section
+      ref={sectionRef}
       id="masjid-amal-mulya"
       data-theme="light"
       style={{
@@ -139,7 +143,7 @@ export default function CoreValuesSection() {
       className="relative lg:sticky lg:top-0 min-h-screen w-full bg-slate-50 text-[#1A2A5B] z-[80] flex flex-col justify-center overflow-visible lg:overflow-visible py-14 sm:py-16 lg:pt-[calc(var(--header-marquee-total)+1.5rem)] lg:pb-10 border-t border-slate-200 lg:border-t-2 lg:border-[#ff9e44] scroll-mt-[var(--header-marquee-total)]"
     >
       {/* Subtle Dot Grid Background Pattern */}
-      <div className="dot-grid-pattern-light" aria-hidden="true" />
+      <div className={`dot-grid-pattern-light ${!isIntersecting ? "animation-paused" : ""}`} aria-hidden="true" />
 
       {/* Main Container */}
       <div ref={containerRef} className="w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 relative z-10">
@@ -147,14 +151,15 @@ export default function CoreValuesSection() {
         {/* HEADER BLOCK */}
         <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
           <MobileReveal delay={0} rotate={-1.5}>
-            <h2 className="font-bold text-3xl sm:text-4xl lg:text-[clamp(2rem,3.2vw,2.875rem)] text-[#1A2A5B] leading-[1.2] tracking-tight mb-3">
+            <h2 className="font-bold text-3xl sm:text-4xl lg:text-[clamp(2rem,3.2vw,2.875rem)] text-[#1A2A5B] leading-[1.45] sm:leading-[1.4] lg:leading-[1.35] tracking-tight mb-3">
               <span className="headline-marker headline-marker-2">
                 {t("section8.headline") || content.headline}
               </span>
             </h2>
           </MobileReveal>
 
-          <MobileReveal delay={100}>
+          <MobileReveal delay={100} className="relative inline-block w-full">
+            <div className="paragraph-backdrop-light" aria-hidden="true" />
             <p className="text-[#706F6F] text-sm sm:text-base lg:text-lg leading-[1.65] font-normal">
               {t("section8.subheadline") || content.subheadline}
             </p>

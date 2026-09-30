@@ -192,14 +192,15 @@ export default function AchievementsSection() {
         {/* HEADER BLOCK */}
         <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
           <MobileReveal delay={0} rotate={-1.5}>
-            <h2 className="font-bold text-4xl sm:text-5xl lg:text-[clamp(2.25rem,3.5vw,3.125rem)] text-white leading-[1.2] tracking-tight mb-3">
+            <h2 className="font-bold text-4xl sm:text-5xl lg:text-[clamp(2.25rem,3.5vw,3.125rem)] text-white leading-[1.45] sm:leading-[1.4] lg:leading-[1.35] tracking-tight mb-3">
               <span className="headline-marker headline-marker-2">
                 {t("section5.headline") || content.headline}
               </span>
             </h2>
           </MobileReveal>
 
-          <MobileReveal delay={100}>
+          <MobileReveal delay={100} className="relative inline-block w-full">
+            <div className="paragraph-backdrop-dark" aria-hidden="true" />
             <p className="text-white/70 text-base sm:text-lg leading-[1.65] font-normal">
               {t("section5.subheadline") || content.subheadline}
             </p>

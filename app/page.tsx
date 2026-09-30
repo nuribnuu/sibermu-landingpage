@@ -16,6 +16,7 @@ import CoreValuesSection from "@/components/CoreValuesSection";
 import ClosingCtaSection from "@/components/ClosingCtaSection";
 import FooterSection from "@/components/FooterSection";
 import FloatingContactButton from "@/components/FloatingContactButton";
+import ScrollToTopButton from "@/components/ScrollToTopButton";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -48,6 +49,7 @@ export default function Home() {
         <>
           <Header />
           <FloatingContactButton />
+          <ScrollToTopButton />
         </>
       )}
 

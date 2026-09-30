@@ -153,26 +153,33 @@ export default function Header() {
 
     // Scroll Spy Handler (Works bidirectionally on scroll UP & DOWN for sticky stacked layout)
     let ticking = false;
+    let cachedHeaderMarqueeTotal = 110;
+    let sectionElementsCache: { id: string; el: HTMLElement }[] = [];
 
-    const handleScrollSpy = () => {
-      const headerMarqueeTotal = parseInt(
+    const updateScrollSpyCache = () => {
+      const parsed = parseInt(
         getComputedStyle(document.documentElement)
           .getPropertyValue("--header-marquee-total") || "110",
         10
       );
-      const targetY = (headerMarqueeTotal || 80) + 50;
+      cachedHeaderMarqueeTotal = parsed || 110;
 
+      sectionElementsCache = sectionIds
+        .map((id) => ({ id, el: document.getElementById(id) }))
+        .filter((item): item is { id: string; el: HTMLElement } => item.el !== null);
+    };
+
+    updateScrollSpyCache();
+
+    const handleScrollSpy = () => {
+      const targetY = cachedHeaderMarqueeTotal + 50;
       let currentActiveId: string | null = null;
 
-      for (const id of sectionIds) {
-        const el = document.getElementById(id);
-        if (!el) continue;
-        const rect = el.getBoundingClientRect();
-
-        // In a top-to-bottom list of sticky stacking sections:
-        // The active section is the LAST section in DOM order whose top edge has reached targetY
+      for (let i = 0; i < sectionElementsCache.length; i++) {
+        const item = sectionElementsCache[i];
+        const rect = item.el.getBoundingClientRect();
         if (rect.top <= targetY) {
-          currentActiveId = id;
+          currentActiveId = item.id;
         }
       }
 

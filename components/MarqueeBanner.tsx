@@ -21,34 +21,41 @@ export default function MarqueeBanner() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const section2 =
-        document.getElementById("hero-secondary") ||
-        document.querySelector("section:nth-of-type(2)");
-      const vh = window.innerHeight;
+    if (typeof window === "undefined" || !("IntersectionObserver" in window)) {
+      setIsVisible(true);
+      return;
+    }
 
-      if (section2) {
-        const rect = section2.getBoundingClientRect();
-        if (rect.top <= vh * 0.95) {
+    const targetSection =
+      document.getElementById("hero-secondary") ||
+      document.querySelector("section:nth-of-type(2)");
+
+    if (!targetSection) {
+      setIsVisible(true);
+      return;
+    }
+
+    // Set initial state based on rect
+    const rect = targetSection.getBoundingClientRect();
+    if (rect.top <= window.innerHeight * 0.95) {
+      setIsVisible(true);
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting || entry.boundingClientRect.top < window.innerHeight * 0.95) {
           setIsVisible(true);
         } else {
           setIsVisible(false);
         }
-      } else {
-        if (window.scrollY >= vh * 1.5) {
-          setIsVisible(true);
-        } else {
-          setIsVisible(false);
-        }
+      },
+      {
+        threshold: 0,
       }
-    };
+    );
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    observer.observe(targetSection);
+    return () => observer.disconnect();
   }, []);
 
   const currentLocale = locale === "en" ? "en" : "id";
@@ -65,7 +72,7 @@ export default function MarqueeBanner() {
     >
       <div className="w-full bg-[#FF9E44] h-[38px] sm:h-[46px] lg:h-[50px] overflow-hidden flex items-center select-none relative shadow-sm border-t-[2.5px] border-b-[2.5px] sm:border-t-[3px] sm:border-b-[3px] border-[#1A2A5B]">
         {/* Single track container (w-max) containing 2 identical copies side-by-side */}
-        <div className="flex w-max items-center animate-marquee">
+        <div className={`flex w-max items-center animate-marquee ${!isVisible ? "animation-paused" : ""}`}>
           {/* Copy 1 */}
           <div className="flex shrink-0 items-center whitespace-nowrap">
             {marqueeItems.map((item, idx) => (

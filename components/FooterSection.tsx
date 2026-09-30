@@ -143,7 +143,7 @@ export default function FooterSection() {
     <footer
       id="footer"
       data-theme="light"
-      className="relative z-[91] w-full bg-white text-[#1A2A5B] border-t-4 border-[#ff9e44] pt-14 sm:pt-16 lg:pt-20 pb-32 sm:pb-28 lg:pb-20 overflow-hidden"
+      className="relative z-[91] w-full bg-white text-[#1A2A5B] border-t-4 border-[#ff9e44] pt-14 sm:pt-16 lg:pt-20 pb-44 sm:pb-32 lg:pb-20 overflow-hidden"
     >
       {/* Main Container */}
       <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 relative z-10">
@@ -332,7 +332,7 @@ export default function FooterSection() {
         </div>
 
         {/* BOTTOM BAR DIVIDER, LEGALITY BADGE & COPYRIGHT */}
-        <MobileReveal delay={350} rotate={0} className="border-t border-slate-200 sm:border-black/10 pt-8 sm:pt-10 flex flex-col items-center justify-center text-center text-xs sm:text-sm text-[#706F6F] font-normal space-y-2">
+        <MobileReveal delay={350} rotate={0} className="border-t border-slate-200 sm:border-black/10 pt-8 sm:pt-10 pb-4 sm:pb-0 flex flex-col items-center justify-center text-center text-xs sm:text-sm text-[#706F6F] font-normal space-y-2">
           <p>{t("footer.copyrightLine1")}</p>
           <p>{t("footer.copyrightLine2")}</p>
         </MobileReveal>

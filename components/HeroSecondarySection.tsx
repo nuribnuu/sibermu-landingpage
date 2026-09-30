@@ -104,7 +104,7 @@ export default function HeroSecondarySection() {
             
             {/* Headline */}
             <MobileReveal delay={0} rotate={-2}>
-              <h2 className="font-bold text-3xl sm:text-4xl lg:text-[clamp(2.25rem,4vw,3.5rem)] text-[#1A2A5B] leading-[1.25] sm:leading-[1.2] lg:leading-[1.18] tracking-tight">
+              <h2 className="font-bold text-3xl sm:text-4xl lg:text-[clamp(2.25rem,4vw,3.5rem)] text-[#1A2A5B] leading-[1.45] sm:leading-[1.4] lg:leading-[1.35] tracking-tight">
                 <span className="headline-marker headline-marker-1">
                   {content.headline.line1}
                 </span>
@@ -116,7 +116,8 @@ export default function HeroSecondarySection() {
             </MobileReveal>
 
             {/* Subheadline */}
-            <MobileReveal delay={100}>
+            <MobileReveal delay={100} className="relative w-full max-w-[480px]">
+              <div className="paragraph-backdrop-light" aria-hidden="true" />
               <p className="text-[#706F6F] text-base sm:text-lg leading-[1.65] font-normal max-w-[480px] mx-auto lg:mx-0">
                 {content.subheadline}
               </p>

@@ -66,7 +66,9 @@ export default function CustomCursor() {
     if (!isEnabled) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      targetPos.current = { x: e.clientX, y: e.clientY };
+      if (cursorRef.current) {
+        cursorRef.current.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+      }
       if (!isVisible) setIsVisible(true);
     };
 
@@ -85,12 +87,24 @@ export default function CustomCursor() {
       );
 
       if (interactiveEl) {
-        setIsHovered(true);
-        const customText = interactiveEl.getAttribute("data-cursor-text");
-        setHoverText(customText || null);
+        const customText = interactiveEl.getAttribute("data-cursor-text") || null;
+        setIsHovered((prev) => {
+          if (!prev) return true;
+          return prev;
+        });
+        setHoverText((prev) => {
+          if (prev !== customText) return customText;
+          return prev;
+        });
       } else {
-        setIsHovered(false);
-        setHoverText(null);
+        setIsHovered((prev) => {
+          if (prev) return false;
+          return prev;
+        });
+        setHoverText((prev) => {
+          if (prev !== null) return null;
+          return prev;
+        });
       }
     };
 
@@ -101,20 +115,6 @@ export default function CustomCursor() {
     document.addEventListener("mouseleave", handleMouseLeave);
     document.addEventListener("mouseenter", handleMouseEnter);
 
-    // Direct 1:1 instant tracking for mouse movement
-    const animate = () => {
-      currentPos.current.x = targetPos.current.x;
-      currentPos.current.y = targetPos.current.y;
-
-      if (cursorRef.current) {
-        cursorRef.current.style.transform = `translate3d(${currentPos.current.x}px, ${currentPos.current.y}px, 0)`;
-      }
-
-      rafId.current = requestAnimationFrame(animate);
-    };
-
-    rafId.current = requestAnimationFrame(animate);
-
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mousedown", handleMouseDown);
@@ -122,10 +122,6 @@ export default function CustomCursor() {
       window.removeEventListener("mouseover", handleMouseOver);
       document.removeEventListener("mouseleave", handleMouseLeave);
       document.removeEventListener("mouseenter", handleMouseEnter);
-
-      if (rafId.current) {
-        cancelAnimationFrame(rafId.current);
-      }
     };
   }, [isEnabled, isVisible]);
 
@@ -165,7 +161,7 @@ export default function CustomCursor() {
     >
       {/* Neobrutalism Custom Cursor */}
       <div
-        className={`relative flex items-center justify-center transition-all duration-150 ease-out -translate-x-1/2 -translate-y-1/2 ${
+        className={`relative flex items-center justify-center transition-[width,height,background-color,border-color,box-shadow,transform] duration-150 ease-out -translate-x-1/2 -translate-y-1/2 ${
           isHovered
             ? "w-7 h-7 bg-[#FF9E44] border-2 border-white ring-2 ring-black rotate-3 shadow-[3px_3px_0px_#000000]"
             : "w-4.5 h-4.5 bg-white border-2 border-white mix-blend-difference rotate-0"

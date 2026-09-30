@@ -282,14 +282,15 @@ export default function StudentOrganizationsSection() {
         {/* HEADER BLOCK */}
         <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
           <MobileReveal delay={0} rotate={-1.5}>
-            <h2 className="font-bold text-3xl sm:text-4xl lg:text-[clamp(2.25rem,3.5vw,3.125rem)] text-[#1A2A5B] leading-[1.2] tracking-tight mb-3">
+            <h2 className="font-bold text-3xl sm:text-4xl lg:text-[clamp(2.25rem,3.5vw,3.125rem)] text-[#1A2A5B] leading-[1.45] sm:leading-[1.4] lg:leading-[1.35] tracking-tight mb-3">
               <span className="headline-marker headline-marker-1">
                 {t("section4.headline") || content.headline}
               </span>
             </h2>
           </MobileReveal>
 
-          <MobileReveal delay={100}>
+          <MobileReveal delay={100} className="relative inline-block w-full">
+            <div className="paragraph-backdrop-light" aria-hidden="true" />
             <p className="text-[#706F6F] text-sm sm:text-base lg:text-lg leading-[1.65] font-normal">
               {t("section4.subheadline") || content.subheadline}
             </p>

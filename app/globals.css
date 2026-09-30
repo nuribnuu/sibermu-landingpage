@@ -116,10 +116,13 @@ body::-webkit-scrollbar {
 
 .animate-marquee {
   animation: marquee 55s linear infinite;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
-.animate-marquee:hover {
-  animation-play-state: paused;
+.animate-marquee:hover,
+.animate-marquee.animation-paused {
+  animation-play-state: paused !important;
 }
 
 @keyframes scroll-wheel {
@@ -167,7 +170,8 @@ body::-webkit-scrollbar {
   display: inline;
   position: relative;
   z-index: 1;
-  padding: 0.05em 0.22em;
+  padding: 0.02em 0.22em;
+  line-height: 1.45;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
   background-image: linear-gradient(
@@ -178,8 +182,8 @@ body::-webkit-scrollbar {
     rgba(var(--gold-rgb), 0.2) 100%
   );
   background-repeat: no-repeat;
-  background-size: 100% 55%;
-  background-position: 0 84%;
+  background-size: 100% 50%;
+  background-position: 0 86%;
 }
 
 .headline-marker-1 {
@@ -247,11 +251,12 @@ body::-webkit-scrollbar {
 .dot-grid-pattern-dark {
   position: absolute;
   inset: 0;
+  overflow: hidden;
   pointer-events: none;
   z-index: 0;
 }
 
-/* SHARED PROPERTIES FOR BASE (::before) AND ANIMATED OVERLAY (::after) LAYERS */
+/* SHARED PROPERTIES FOR BASE (::before) AND SECONDARY (::after) STATIC LAYERS */
 .dot-grid-pattern-light::before,
 .dot-grid-pattern-light::after,
 .dot-grid-pattern-dark::before,
@@ -277,7 +282,7 @@ body::-webkit-scrollbar {
   );
 }
 
-/* BASE LAYER (::before) - ALWAYS VISIBLE STATIC DOT GRID */
+/* BASE LAYER (::before) - STATIC DOT GRID */
 .dot-grid-pattern-light::before {
   background-image: radial-gradient(
     circle,
@@ -296,15 +301,14 @@ body::-webkit-scrollbar {
   opacity: 0.4;
 }
 
-/* ANIMATED OVERLAY LAYER (::after) - DRIFT + BREATHING PULSE */
+/* SECONDARY OVERLAY LAYER (::after) - PROMINENT STATIC DOT PATTERN */
 .dot-grid-pattern-light::after {
   background-image: radial-gradient(
     circle,
     rgba(26, 42, 91, 0.25) 2px,
     transparent 2px
   );
-  animation: dotDrift 20s linear infinite, dotBreathe 6s ease-in-out infinite;
-  will-change: background-position, background-size, opacity;
+  opacity: 0.65;
 }
 
 .dot-grid-pattern-dark::after {
@@ -313,29 +317,38 @@ body::-webkit-scrollbar {
     rgba(255, 255, 255, 0.18) 2px,
     transparent 2px
   );
-  animation: dotDrift 20s linear infinite, dotBreathe 6s ease-in-out infinite;
-  will-change: background-position, background-size, opacity;
+  opacity: 0.55;
 }
 
-/* CONTINUOUS AMBIENT ANIMATION FOR DOT GRID PATTERNS (DRIFT + BREATHING + SCALE PULSE) */
-@keyframes dotDrift {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: 44px 44px;
-  }
+/* LOCAL PARAGRAPH TEXT BACKDROP RADIAL FADE BEHIND FLOATING PARAGRAPHS ONLY */
+.paragraph-backdrop-light {
+  position: absolute;
+  inset: -1.25rem -1.75rem;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(248, 250, 252, 0.65) 0%,
+    rgba(248, 250, 252, 0.45) 45%,
+    rgba(248, 250, 252, 0.2) 72%,
+    transparent 90%
+  );
+  pointer-events: none;
+  z-index: -1;
+  border-radius: 9999px;
 }
 
-@keyframes dotBreathe {
-  0%, 100% {
-    opacity: 0.25;
-    background-size: 22px 22px;
-  }
-  50% {
-    opacity: 0.85;
-    background-size: 25px 25px;
-  }
+.paragraph-backdrop-dark {
+  position: absolute;
+  inset: -1.25rem -1.75rem;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(11, 9, 31, 0.65) 0%,
+    rgba(11, 9, 31, 0.45) 45%,
+    rgba(11, 9, 31, 0.2) 72%,
+    transparent 90%
+  );
+  pointer-events: none;
+  z-index: -1;
+  border-radius: 9999px;
 }
 
 /* ACCESSIBILITY: REDUCED MOTION USERS RECEIVE ONLY THE STATIC BASE LAYER */
@@ -389,5 +402,6 @@ body::-webkit-scrollbar {
 .scroll-reveal-element.is-revealed {
   opacity: 1;
   transform: translateY(0) rotate(0deg);
+  will-change: auto;
 }
 

@@ -87,10 +87,27 @@ export default function ScrollSequence({
       context.drawImage(img, drawX, drawY, drawWidth, drawHeight);
     };
 
+    let cachedHeroTop = 0;
+    let cachedHeroHeight = window.innerHeight * 3.0;
+    let isHeroInView = true;
+    let isAnimating = false;
+
+    const updateDimensions = () => {
+      const heroSection = document.getElementById("hero");
+      if (heroSection) {
+        cachedHeroTop = heroSection.offsetTop;
+        cachedHeroHeight = heroSection.offsetHeight;
+      } else {
+        cachedHeroTop = 0;
+        cachedHeroHeight = window.innerHeight * 3.0;
+      }
+    };
+
     const updateCanvasSize = () => {
       const dpr = window.devicePixelRatio || 1;
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
+      updateDimensions();
       renderFrame(currentFrameIndex);
     };
 
@@ -142,27 +159,45 @@ export default function ScrollSequence({
       }
     };
 
+    const startAnimationLoop = () => {
+      if (isAnimating) return;
+      isAnimating = true;
+      const animate = () => {
+        if (currentFrameIndex !== targetFrameIndex) {
+          currentFrameIndex = targetFrameIndex;
+          renderFrame(currentFrameIndex);
+        }
+        if (isHeroInView) {
+          animationFrameId = requestAnimationFrame(animate);
+        } else {
+          isAnimating = false;
+        }
+      };
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
     const updateFrameOnScroll = () => {
-      const heroSection = document.getElementById("hero");
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const relativeScroll = scrollTop - cachedHeroTop;
+      const maxPinScroll = cachedHeroHeight - window.innerHeight;
 
-      let heroTop = 0;
-      let heroHeight = window.innerHeight * 3.0;
+      if (cachedHeroHeight <= 0) return;
 
-      if (heroSection) {
-        heroTop = heroSection.offsetTop;
-        heroHeight = heroSection.offsetHeight;
+      // Check if Hero canvas is still in view
+      const pastHero = relativeScroll > cachedHeroHeight + 100;
+      if (pastHero) {
+        if (isHeroInView) {
+          isHeroInView = false;
+        }
+        return;
+      } else {
+        if (!isHeroInView) {
+          isHeroInView = true;
+          startAnimationLoop();
+        }
       }
 
-      const relativeScroll = scrollTop - heroTop;
-      const maxPinScroll = heroHeight - window.innerHeight; // Point where Section 2 starts sliding up from bottom
-      const totalScroll = heroHeight; // Point where Section 2 100% covers Section 1
-
-      if (totalScroll <= 0) return;
-
       // Touch EXPLORE happens at Frame 105.
-      // Pinning ends at Frame 168 (OVERLAP_START_FRAME: character has dissolved into wisps/smoke & transparent headset per ezgif-frame-180.png).
-      // During overlap (Section 2 slide-up), frames move 168 -> 200 as Section 2 covers Section 1.
       const TOUCH_FRAME = 105;
       const PIN_END_FRAME = 160;
       const OVERLAP_END_FRAME = 180;
@@ -193,35 +228,32 @@ export default function ScrollSequence({
 
       const frameIndex = Math.min(TOTAL_FRAMES, Math.max(1, calculatedFrame));
       targetFrameIndex = frameIndex;
+
+      // Ensure frame is updated immediately if loop stopped
+      if (!isAnimating && isHeroInView) {
+        startAnimationLoop();
+      }
     };
 
-    const animate = () => {
-      if (currentFrameIndex !== targetFrameIndex) {
-        currentFrameIndex = targetFrameIndex;
-        renderFrame(currentFrameIndex);
-      }
-      animationFrameId = requestAnimationFrame(animate);
+    const handleResize = () => {
+      updateCanvasSize();
+      updateFrameOnScroll();
     };
 
     window.addEventListener("scroll", updateFrameOnScroll, { passive: true });
-    window.addEventListener("resize", () => {
-      updateCanvasSize();
-      updateFrameOnScroll();
-    });
-    window.addEventListener("orientationchange", () => {
-      updateCanvasSize();
-      updateFrameOnScroll();
-    });
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("orientationchange", handleResize);
 
     preloadImages();
+    updateDimensions();
     updateFrameOnScroll();
-    animationFrameId = requestAnimationFrame(animate);
+    startAnimationLoop();
 
     return () => {
       if (fallbackTimeoutTimer) clearTimeout(fallbackTimeoutTimer);
       window.removeEventListener("scroll", updateFrameOnScroll);
-      window.removeEventListener("resize", updateCanvasSize);
-      window.removeEventListener("orientationchange", updateCanvasSize);
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("orientationchange", handleResize);
       cancelAnimationFrame(animationFrameId);
     };
   }, []);

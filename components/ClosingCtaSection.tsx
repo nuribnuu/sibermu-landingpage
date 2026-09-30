@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import MobileReveal from "@/components/MobileReveal";
 import { smoothScrollToTarget } from "@/utils/smoothScroll";
+import { useViewportAnimation } from "@/hooks/useViewportAnimation";
 
 const badgeHashtags = {
   id: [
@@ -47,13 +48,15 @@ export default function ClosingCtaSection() {
   const currentHashtags = badgeHashtags[locale] || badgeHashtags.id;
 
   const [badgeIndex, setBadgeIndex] = useState(0);
+  const { ref: sectionRef, isIntersecting } = useViewportAnimation<HTMLElement>();
 
   useEffect(() => {
+    if (!isIntersecting) return;
     const interval = setInterval(() => {
       setBadgeIndex((prev) => (prev + 1) % currentHashtags.length);
     }, 2200);
     return () => clearInterval(interval);
-  }, [currentHashtags.length]);
+  }, [currentHashtags.length, isIntersecting]);
 
   const handleScrollTo = (
     e: React.MouseEvent<HTMLAnchorElement>,
@@ -65,11 +68,12 @@ export default function ClosingCtaSection() {
 
   return (
     <section
+      ref={sectionRef}
       id="closing-cta"
       data-theme="dark"
       className="relative lg:sticky lg:top-0 min-h-screen w-full bg-[#0b091f] text-white z-[90] flex flex-col justify-center overflow-visible lg:overflow-visible py-16 sm:py-20 lg:pt-[calc(var(--header-marquee-total)+1.5rem)] lg:pb-8 border-t border-white/5 lg:border-t-2 lg:border-[#ff9e44] scroll-mt-[var(--header-marquee-total)]"
     >
-      <div className="dot-grid-pattern-dark" aria-hidden="true" />
+      <div className={`dot-grid-pattern-dark ${!isIntersecting ? "animation-paused" : ""}`} aria-hidden="true" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] bg-indigo-600/15 rounded-none blur-[150px] pointer-events-none" />
 
       <div className="w-full max-w-5xl mx-auto px-6 sm:px-10 lg:px-14 relative z-10 text-center flex flex-col items-center justify-center">
@@ -83,7 +87,7 @@ export default function ClosingCtaSection() {
         </MobileReveal>
 
         <MobileReveal delay={100} rotate={1.5}>
-          <h2 className="font-bold text-4xl sm:text-5xl lg:text-[clamp(2.25rem,4vw,3.5rem)] text-white leading-[1.18] tracking-tight mb-4 sm:mb-6 max-w-3xl">
+          <h2 className="font-bold text-4xl sm:text-5xl lg:text-[clamp(2.25rem,4vw,3.5rem)] text-white leading-[1.45] sm:leading-[1.4] lg:leading-[1.35] tracking-tight mb-4 sm:mb-6 max-w-3xl">
             <span className="headline-marker headline-marker-1">
               {content.headline}
             </span>

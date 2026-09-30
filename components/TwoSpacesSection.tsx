@@ -83,7 +83,7 @@ export default function TwoSpacesSection() {
       <div ref={containerRef} className="w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 relative z-10">
         {/* HEADLINE BLOCK */}
         <MobileReveal delay={0} rotate={-2} className="text-center mb-10 sm:mb-14">
-          <h2 className="font-bold text-4xl sm:text-5xl lg:text-[clamp(2.5rem,3.8vw,3.5rem)] text-white leading-[1.25] sm:leading-[1.2] lg:leading-[1.18] tracking-tight">
+          <h2 className="font-bold text-4xl sm:text-5xl lg:text-[clamp(2.5rem,3.8vw,3.5rem)] text-white leading-[1.45] sm:leading-[1.4] lg:leading-[1.35] tracking-tight">
             <span className="headline-marker headline-marker-1">
               {content.headline.line1} {content.headline.line2}
             </span>
